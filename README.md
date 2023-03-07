@@ -10,24 +10,24 @@ SERDIF is combination of methods and tools based on the use of World Wide Web Co
 
 The data linkage takes place at a query level where the geographic location ([GeoSPARQL](https://www.ogc.org/standards/geosparql)) and time window ([xsd:dateTime](https://www.w3.org/TR/xmlschema11-2/) are used as the common aspects to link the data for each event.
 
-## Evaluation
+## Latest working version: phase-3
 
-The usefulness of the SERDIF framework and the refinement of the initial health data researchers requirements were evaluated through usability testing.
-The usability testing approach consisted of three phases: (P1) identifying and refining the initial user requirements, (P2) validation of the usefulness of the framework for HDRs and (P3) consolidation of the requirements. Each phase represented an iteration that comprised the development or refinement of the framework based on the user requirements and the evaluation that provided the basis for the refinement of the framework and requirements.
-
-The SERDIF components evaluated at each of the phases are made available below.
-
-### Phase 2 version
-Knowledge Graph: https://serdif-example.adaptcentre.ie/
-
-User Interface: https://serdif-example-dash.herokuapp.com/
-
-Publication: https://www.semantic-web-journal.net/content/evaluating-usability-semantic-environmental-health-data-framework-approach-and-study
-
-### Phase 3 version
 Knowledge Graph: https://serdif-kg.adaptcentre.ie/
 
 User Interface: https://serdif-ui.adaptcentre.ie/
+
+## Evaluation
+
+The usability and potential usefulness of the SERDIF framework has been evaluated following an interative  user-centred design that included three phases. The KG and UI documentation for each of the phases is made available in `phase-1/`, `phase-2/` and `phase-3/`.
+
+## Publications associated with each of the phases
+
+* **phase-1**: A. Navarro-Gallinad, F. Orlandi and D. O’Sullivan, Enhancing Rare Disease Research with Semantic Integration of Environmental and Health Data, in: The 10th International Joint Conference on Knowledge Graphs, IJCKG’21, Association for Computing Machinery, New York, NY, USA, 2021, pp. 19–27. ISBN 978-1-4503-9565-6.[https://doi.org/10.1145/3502223.3502226](https://doi.org/10.1145/3502223.3502226)
+
+* **phase-2**: A. Navarro-Gallinad, F. Orlandi, J. Scott, M. Little and D. O’Sullivan, Evaluating the usability of a semantic environmental health data framework: approach and study. Semantic Web Journal 11(1) (2022), Publisher: IOS Press. [https://doi.org/10.3233/SW-223212](https://doi.org/10.3233/SW-223212)
+
+
+* **phase-3**: drafting
 
 ## Contact
 This space is administered by:  
