@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+
+ 	<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- TableFiltering -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.20/css/dataTables.bootstrap4.min.css " rel="stylesheet">
+   
+	<style>
+		body {
+		  font-family: "Lato", sans-serif;
+		}
+		
+		h1,h2,h3,h4 {	
+		color: #005A9C;
+		}
+		
+		h1 {
+			padding-top: 4rem;
+		}
+		
+		h2,h3,h4 {	
+		padding-top: 1rem;
+		}
+		
+		.center {
+		text-align: center;
+		}
+		
+		.sidenav {
+		  width: 20%;
+		  position: fixed;
+		  z-index: 1;
+		  top: 20px;
+		  left: 10px;
+		  background: #eee;
+		  overflow-x: hidden;
+		  padding: 8px 0;
+		}
+
+		.sidenav a, .dropdown-btn {
+		  padding: 6px 8px 6px 16px;
+		  text-decoration: none;
+		  font-size: 20px;
+		  color: #2196F3;
+		  display: block;
+		  border: none;
+		  background: none;
+		  width: 100%;
+		  text-align: left;
+		  cursor: pointer;
+		  outline: none;
+		}
+		
+		.sidenav a:hover, .dropdown-btn:hover {
+		  color: #064579;
+		}
+
+		.main {
+		  margin-left: 5%; /* Same width as the sidebar + left position in px */
+		  margin-right: 5%;
+		  font-size: 16px; /* Increased text to enable scrolling */
+		  padding: 0px 10px;
+		}
+
+		@media screen and (max-height: 450px) {
+		  .sidenav {padding-top: 15px;}
+		  .sidenav a {font-size: 18px;}
+		}
+						
+		.bd-callout {
+		  padding: 1.25rem;
+		  margin-top: 1.25rem;
+		  margin-bottom: 1.25rem;
+		  border: 1px solid #eee;
+		  border-left-width: .25rem;
+		  border-radius: .25rem;
+		}
+		.bd-callout-info {
+		  border-left-color: #2e86c1 ;
+		  border-left-width: 0.4rem;
+		}
+		.bd-callout-info { @include bs-callout-variant($bd-info); }
+	
+		/* Add an active class to the active dropdown button */
+		.active {
+		  background-color: transparent;
+		  color: black;
+		}
+
+		/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+		.dropdown-container {
+		  display: none;
+		  background-color: #d6eaf8;
+		  padding-left: 8px;
+		}
+
+		/* Optional: Style the caret down icon */
+		.fa-caret-down {
+		  float: right;
+		  padding-right: 8px;
+		}
+		
+		.green-codespan {
+		  color:    #1e8449 ;
+		  background-color:   #e9f7ef  ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.blue-codespan {
+		  color:  #1f618d;
+		  background-color:  #eaf2f8;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.section-codespan {
+		  color:  #1f618d;
+		  background-color:  transparent;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.lightblue-codespan {
+		  color:   #03a9f4 ;
+		  background-color:  #e1f5fe;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.red-codespan {
+		  color:   #a93226 ;
+		  background-color: #fadbd8 ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.orange-codespan {
+		  color:   #d35400 ;
+		  background-color:   #f6ddcc  ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.grey-codespan {
+		  color:   #515a5a  ;
+		  background-color:  #ccd1d1  ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		div {
+		  text-align: justify;
+		  text-justify: inter-word;
+		}
+		
+		th {
+		  background: white;
+		  position: sticky;
+		  top: 0; /* Don't forget this, required for the stickiness */
+		  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+		}
+		
+		/* ensure first header cell sits atop everything else when scrolling right */
+		table#sortTable th:first-child {
+			position:sticky;
+			left:0;
+			z-index:2;
+		}
+		/* make first column sticky when scrolling right */
+		table#sortTable td:first-child {
+			box-shadow: 0 0px 2px -1px rgba(0, 0, 0, 0.1);
+			opacity: 0.9;
+			position:sticky;
+			left:0;
+			border-right-color:#aaa;
+		}
+		
+		table#sortTable {
+			width:100%;
+			height:30rem;
+		}
+		
+		table#evTable {
+			height:10rem;
+			border:none;
+		}
+
+	</style>
+     
+<title>SERDIF Report</title>
+  
+</head>
+<body>    
+    <nav class="navbar fixed-top navbar-light bg-light" >
+		<a class="navbar-brand" href="#"></a>
+	</nav>
+	
+	<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light justify-content-between" style="padding-bottom:1rem;">
+	  <a class="navbar-brand" href="#">Navigation bar - Table of Contents</a>
+	  <a class="nav-link" href="#introduction">1. Introduction<span class="sr-only">(current)</span></a>
+	  <a class="nav-link" href="#metadata">2. Metadata</a>
+	  <a class="nav-link" href="#data">3. Data</a>
+	  <a class="nav-link" href="#contact">4. Contact</a>
+	  <form class="form-inline">
+		<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width:8rem;">
+		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+	  </form>
+	</nav>
+    
+	<div class="main">
+		<h1 id="title">SERDIF Report</h1>
+		<h4 style="color:grey">{{data.date}}</h4> 
+		<div class="alert alert-warning" role="alert">
+			<b>Remember:</b> if the event data from your input is <b>considered personal data</b>,
+			you require <b>explicit permission</b>  from the data controller and/or Data Protection Officer
+			assigned to the data for <u>accessing</u>, <u>using</u> and <u>processing</u> the data. <b>Further approval</b>  is needed
+			if the intend is to <u>share</u> the data with others or <u>deposit</u>  the data in an open data repository. 
+		</div>
+	  <p class="copyright"> © 2022 - Copyright: Albert Navarro-Gallinad (Last update: June 2022)  </p>
+		<hr title="Separator for header">
+		   
+		<section id="introduction" >
+			<h2>1. Introduction</h2>
+			The SERDIF (Semantic Environmental and Rare Disease data Integration Framework) report provides an initial exploration of the environmental data
+			linked with your input health events from the SERDIF User Interface (UI). The aim of the report is to make the linked data easier to understand rather than if you looked at the raw data in knowledge graph or data table formats.
+			<p></p>
+			The report is structured as follows. 
+			Section 2 <code class="blue-codespan">Metadata</code> describes the metadata associated with the linked data.
+			Section 3 <code class="blue-codespan">Data</code> presents the linked data in an explorable manner (<a href="#sortTable" style="margin-right: 0.5rem;"><i class="fa fa-fw fa-table"></i>Data table</a> and <a href="#exploration"><i class="fa fa-fw fa-bar-chart"></i>Exploration</a>). 
+			Section 4 <code class="blue-codespan">Contact</code> has the contact information of the report developer.
+			
+		</section>
+		
+		<section id="metadata" >
+			<h2>2. Metadata</h2>
+			The metadata information is organised in five categories: dataset descriptors, input data, processing steps, dataset sharing and dataset structure.  The categories boxes below can be <b>clicked</b>  to display the information.
+			<p></p>
+			<div class="row">
+			  <div class="col-3">
+				<div class="list-group" id="list-tab" role="tablist">
+				  <a class="list-group-item list-group-item-action active" id="list-idescriptors-list" data-toggle="list" href="#list-idescriptors" role="tab" aria-controls="idescriptors"><i class="fa fa-fw fa-info-circle"></i>Dataset descriptors</a>
+				  <a class="list-group-item list-group-item-action" id="list-iprovenance-list" data-toggle="list" href="#list-iprovenance" role="tab" aria-controls="iprovenance"><i class="fa fa-fw fa-sign-in"></i>Input data</a>
+				  <a class="list-group-item list-group-item-action" id="list-ilineage-list" data-toggle="list" href="#list-ilineage" role="tab" aria-controls="ilineage"><i class="fa fa-fw fa-code-fork"></i>Processing steps</a>
+				  <a class="list-group-item list-group-item-action" id="list-istructure-list" data-toggle="list" href="#list-istructure" role="tab" aria-controls="istructure"><i class="fa fa-fw fa-table"></i>Dataset structure</a>
+				  <a class="list-group-item list-group-item-action" id="list-iprotection-list" data-toggle="list" href="#list-iprotection" role="tab" aria-controls="iprotection"><i class="fa fa-fw fa-shield"></i>Dataset sharing</a>
+				  			  
+				</div>
+			  </div>
+			  <div class="col-9">
+				<div class="tab-content" id="nav-tabContent">
+				  <div class="tab-pane fade show active" id="list-idescriptors" role="tabpanel" aria-labelledby="list-idescriptors-list">
+					  <ul>
+						<li><code class="blue-codespan">Title</code>: Dataset with air pollution and weather data linked with multiple events related to {{data.context}}</li>
+						<li><code class="blue-codespan">Description</code>: The dataset is the result of linking air pollution and weather datasets to particular events related to {{data.context}} through space and time. The dataset contains aggregated observations within an area relevant to each particular event and for a time window before the event in {{data.timeUnit}}. The data is aggregated using the {{data.aggMethod}} function.</li>
+						<li><code class="blue-codespan">Version</code>: v{{data.version}}</li>
+						<li><code class="blue-codespan">Issued</code>: {{data.queryDateTime}}</li>
+						<li><code class="blue-codespan">Publisher</code>: {{data.publisher}}</li>
+						<li><code class="blue-codespan">License</code>: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC-BY-SA</a></li>
+						<li><code class="blue-codespan">Temporal resolution</code>: {{data.timeUnit}}</li>
+						<li><code class="blue-codespan">Data use</code>: <a href="http://purl.obolibrary.org/obo/DUO_0000012" target="_blank">research specific restrictions</a>, 
+						<a href="http://purl.obolibrary.org/obo/DUO_0000007" target="_blank">disease specific research</a>, 
+						<a href="http://purl.obolibrary.org/obo/DUO_0000046" target="_blank">non-commercial use only</a></li>		  
+					  </ul>	  
+					  </div>
+				  <div class="tab-pane fade" id="list-iprovenance" role="tabpanel" aria-labelledby="list-iprovenance-list">
+					  The following table includes the health event data uploaded to be linked with environmental data relevant to each particular event. 
+					  <p></p>
+					  <ul>
+						<li><code class="green-codespan">event</code>: event id</li>
+						<li><code class="green-codespan">lon</code>: logitude coordinate of the event point location.</li>
+						<li><code class="green-codespan">lat</code>: latitude coordinate of the event point location.</li>
+						<li><code class="green-codespan">date</code>: date when the event happened.</li>
+						<li><code class="green-codespan">lag</code>: time between the data and the event [days].</li>
+						<li><code class="green-codespan">length</code>: time interval to gather data from [days].</li>
+					  </ul>
+					  <p></p>
+					  {{data.eventTable}}
+				
+					  				  
+				  </div>
+				  <div class="tab-pane fade" id="list-ilineage" role="tabpanel" aria-labelledby="list-ilineage-list">
+					  The following steps define the <b>linkage process</b> to link environmental data with particular health events through <b>space</b> and <b>time</b>.	<u>The steps were conducted for each event</u>	  
+					  <p></p>
+					  <b>Preliminary Step.</b> Surface atmospheric data has been downloaded as NetCDF and CSV files (weather data from <a href="https://doi.org/10.24381/cds.151d3ec6" target="_blank">Copernicus</a> and air pollution from <a href="https://discomap.eea.europa.eu/map/fme/AirQualityExport.htm" target="_blank">EEA</a>) and uplifted to RDF (i.e. knowledge graph format) for Europe and 2011-2020 period.
+					  <p></p>
+					  <b>Step 1.</b> Define an area based on the event point location and the query spatial linkage options. 
+					  <div class="bd-callout bd-callout-info">
+						  The spatial linkage options that you have selected are: <code class="blue-codespan">{{data.spOption1}}</code> and <code class="blue-codespan">{{data.spOption2}}</code>
+						  <p></p>
+						  The <code class="green-codespan">area</code> you have defined is : {{data.areaText}}
+					  </div>
+					  <b>Step 2.</b> Select datasets within the area of the event. 
+					  <div class="bd-callout bd-callout-info">
+						  The <code class="green-codespan">datasets</code> selected from your linkage options are: <a class="btn btn-outline-success" data-toggle="collapse" href="#collapseStep2" role="button" aria-expanded="false" aria-controls="collapseStep2" style="margin-left:1rem">
+							Step 2: Result <i class="fa fa-fw fa-folder-open-o"></i>
+						  </a> 			  
+						<div class="collapse" id="collapseStep2">
+						  <div class="card card-body">
+							  <p>
+							 The following map represents the <code class="orange-codespan">events</code> and <code class="green-codespan">datasets used</code> in the data linkage process. 
+							 </p>
+							{{data.datasetmap}}
+						  </div>
+						</div>
+					  </div>
+					  <b>Step 3. </b> Define a time window from the event date, lag from the event and interval to gather the data. <code class="blue-codespan">time</code> 
+					  <div class="bd-callout bd-callout-info">
+						The <code class="green-codespan">time-window</code> that you have defined is: <a class="btn btn-outline-success" data-toggle="collapse" href="#collapseStep3" role="button" aria-expanded="false" aria-controls="collapseStep3" style="margin-left:1rem">	Step 3: Result <i class="fa fa-fw fa-folder-open-o"></i>	</a>	  
+						<div class="collapse" id="collapseStep3">
+						  <div class="card card-body">
+							  <p>
+							 The timeline plot represents the <code class="green-codespan">time-window</code> of gathered data for each event. The vertical <code class="grey-codespan">black</code> lines represent the date of the event and the boxes the time-window. The legend can be clicked to select or deselect specific events and the plot itself is interactive with hover, zoom, pan and export functions.
+							 </p>
+							{{data.timeline}}
+						  </div>
+						</div>
+					 </div>	
+					  <b>Step 4.</b> Subset the datasets selected in Step 2 by the specific time window from Step 3.
+					  <p></p>
+					  <b>Step 5.</b> Aggregate the selected datasets (space) for the defined time window (time) with the temporal units and aggregation methods selected from the query options.
+					   <div class="bd-callout bd-callout-info">
+						   You chose the <code class="blue-codespan">{{data.aggMethod}}</code> method to integrate the environmental data within the selected <code class="green-codespan">area</code> and <code class="green-codespan">time window</code>.
+						   <p></p>
+						   The datasets were aggregated at the <code class="blue-codespan">{{data.timeUnit}}</code> time unit as you had selected.
+					   </div>
+					  
+				  </div>
+				  <div class="tab-pane fade" id="list-iprotection" role="tabpanel" aria-labelledby="list-iprotection-list">
+					  The <code class="blue-codespan">Data Recipient</code> is responsible for seeking approval from the <code class="blue-codespan">Data controller</code> before sharing or publishing the data with third parties that do not have access to the health data consulted during the <code class="blue-codespan">Data processing</code>. 
+					  <p> </p>
+					  <ul>
+						<li><code class="blue-codespan">Data controller</code>: {{data.dataController}}
+						<li><code class="blue-codespan">Data processing</code>: input health events (i.e. location and time) have been consulted to align and combine surface atmospheric data; therefore, linking environmental data to individual health events. </li>
+						<li><code class="blue-codespan">Data Recipient</code>: {{data.orcid}} </li>					
+						<li><code class="blue-codespan">Data use</code>: <a href="http://purl.obolibrary.org/obo/DUO_0000012" target="_blank">research specific restrictions</a>, 
+						<a href="http://purl.obolibrary.org/obo/DUO_0000007" target="_blank">disease specific research</a>, 
+						<a href="http://purl.obolibrary.org/obo/DUO_0000046" target="_blank">non-commercial use only</a></li>	
+						<li><code class="blue-codespan">Identification risk</code>: the dataset is considered pseudonymised since effective anonymisation was not possible without losing value of the data for research during the linkage process. This is because individual event dates and locations/areas can be inferred from the environmental data, which combine with health event information (e.g. a disease condition) could provide enough context to reidentify an individual. 	The impact of the context on anonymization has to be assessed for each case. </li>	  
+					  </ul>
+				  </div>
+				  <div class="tab-pane fade" id="list-istructure" role="tabpanel" aria-labelledby="list-istructure-list">
+					 The linked data retrieved from the query interface includes the <code class="blue-codespan">values</code>, <code class="blue-codespan">normals</code> and <code class="blue-codespan">sdev</code> (standard deviation) as three separate data tables and as a knowledge graph structured as a <a href="https://www.w3.org/TR/vocab-data-cube/" target="_blank">datacube</a>.
+					  <ol>
+						<li><code class="blue-codespan">values</code>: actual data values.</li>
+						<li><code class="blue-codespan">normals</code>: monthly mean values from all the available data (2011-2020).</li>
+						<li><code class="blue-codespan">sdev</code>: monthly standard deviation values from all the available data (2011-2020).</li>
+					  </ol>
+					 <p></p>
+					 The <code class="blue-codespan">normal</code> and <code class="blue-codespan">sdev</code> values are computed for each event as they depend on the <code class="green-codespan">area</code> selected (i.e. the <code class="green-codespan">datasets-used</code> for each event).
+					 <p></p>
+					 The dataset includes the following weather and air pollution variables:
+					 <ul>
+						<li> <code class="orange-codespan">weather</code>: {{data.weatherLinks}} .</li>
+						<li> <code class="orange-codespan">air pollution</code>: {{data.pollutionLinks}} .</li>
+					 </ul>
+					 
+				  </div>
+				</div>
+			  </div>
+			</div>
+					
+				  
+		</section>
+		
+		<section id="data" >
+			<h2>3. Data</h2>
+			The surface atmospheric linked data includes weather and air pollution data related to the external environment of each of the health events. We can understand this as the parcel of air around you during your daily life, which has certain characteristics. Weather data can tell us where the air parcel comes from and air pollution data can provide us with information about the composition of the air. In addition, tracking the air parcel through time can give us information about evolution of the air associated with the health events. For example, if a polluted air mass took the place of a cleaner one at a given time.
+			<p></p>
+			This section first presents the linked data as a table (Section 3.1), and then, the data is displayed as charts to explore possible patterns that may appear (Section 3.2).
+			
+		
+			<h3>3.1. Data Table</h3>
+			The linked data is structured in slices, where each slice contains the data associated with each event. The slice is defined by 3 different indices:
+			 <ol>
+				<li><code class="green-codespan">Event</code>: event id given during the upload step.</li>
+				<li><code class="green-codespan">Date</code>: date when the event happened.</li>
+				<li><code class="green-codespan">Lag</code>: number of units of time (i.e. days, months or years) relative to the event date.</li>
+			  </ol>
+		  Then for each combination of indeces, the environmental data is expanded in the wide format, with each column being a different variable. 
+		   <p></p>
+		  The <code class="blue-codespan">z-scores</code>, number of standard deviations by which the value of an observation or data point is above the mean value of what is being observed or measured, have been computed from the  <code class="blue-codespan">normal</code> and <code class="blue-codespan">sdev</code> values (see <code class="section-codespan">Dataset structure</code> in the <code class="section-codespan">Metadata</code> section).
+		   The background cell colours represent the z-scores over or under a specific threshold: <code class="red-codespan">red</code> (value > +2 sdev) and <code class="lightblue-codespan">blue</code> (value < -2 sdev).
+		  <p></p>
+		  In addition, the data table can be filtered using the text input below:
+		  <p></p>
+		  
+			<p>Type something in the input field to search the table for its column values (e.g. "event-B"):</p>  
+			<input class="form-control" id="myInput" type="text" placeholder="Search..." >
+			<br>
+			Hovering over the column names will provide you with the full variable name and the units of the variable.
+			<p></p>
+				{{data.dataTable}}
+			<p></p>
+			<h3 id="exploration">3.2. Data Exploration</h3>
+			<h4>Overview Figure: values</h4>
+			The data is represented using a time series plot to track the evolution of the air parcel characteristics and composition from the date of the event. The plot displays the mean value of each variable across all the events per lag (<code class="green-codespan">mean values</code>) with the possibility to plot the raw value value distribution previous to the average (<code class="green-codespan">sample variability</code>).
+			<p></p>
+			The vertical axis on the left represents the magnitude of the variable and the horizontal axis the lag. The lag is the number of days, months or years previous to the health event, depending on the data you requested. The color bar on the right represents the magnitude for the weather variable displayed in the background of the plot.
+			<p>
+			  <a class="btn btn-outline-success" data-toggle="collapse" href="#collapseWeather" role="button" aria-expanded="false" aria-controls="collapseWeather" style="margin-top:1rem;margin-right:1rem;">
+				Air parcel: weather <i class="fa fa-fw fa-info-circle"></i>
+			  </a>
+			
+			  <a class="btn btn-outline-success" data-toggle="collapse" href="#collapsePollution" role="button" aria-expanded="false" aria-controls="collapsePollution" style="margin-top:1rem;margin-right:1rem;">
+				Air parcel: pollution <i class="fa fa-fw fa-info-circle"></i>
+			  </a>
+
+			  <a class="btn btn-outline-success" data-toggle="collapse" href="#collapseBoxes" role="button" aria-expanded="false" aria-controls="collapseBoxes" style="margin-top:1rem;">
+				Sample variability <i class="fa fa-fw fa-info-circle"></i>
+			  </a>
+			</p>
+			
+			<div class="collapse" id="collapseWeather">
+			  <div class="card card-body">
+				  <p>
+				 The <code class="orange-codespan">temperature</code> and <code class="orange-codespan">humidity</code> properties characterize an air parcel providing information of where it was originated, the source region. For example, dry hot air comes from the tropic and moist cold air from the poles.
+				 </p>
+				 <p>
+				 <code class="orange-codespan">High pressure</code> values mean that the air parcel is heavy and it sinks from higher layers of the atmosphere to the surface. We can generally expect more solar radiation due to the stable environmental conditions. Meanwhile, <code class="orange-codespan">low pressure</code> values make the air rise from the surface to the atmosphere, and we expect less <code class="orange-codespan">solar radiation</code> due to the active environmental conditions.
+				</p>
+				<p>
+				<code class="orange-codespan">High pressure</code>  can be related to poor air quality and high pollen counts in summer. 
+				Further information on weather conditions is available on the Met Office <a href="https://www.metoffice.gov.uk/weather/learn-about/weather/how-weather-works/high-and-low-pressure/weather-conditions" target="_blank">website</a>. 
+				 </p>
+				 <p>
+				The <code class="orange-codespan">wind speed</code>  can tell us if the current air parcel has been displaced by another one. If the wind speed is low the air parcel composition will reflect a higher concentration of local pollutants, while high wind speeds can bring external pollutants to the location of study. 
+				 </p>
+			  </div>
+			</div>
+			
+			<div class="collapse" id="collapsePollution">
+			  <div class="card card-body">
+				  <p>
+				 The composition of the air parcel can vary depending on the location of the health event. For example, <code class="orange-codespan">particulate matter (PM)</code>  can be formed by primary and secondary sources, combustion sources (e.g. vehicles and industry) and gases that react to form PM in the atmosphere (e.g. SO2 or NOx) respectively. The threshold values  for air pollutants stated by the World Health Organization (WHO) are available on their <a href="https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health" target="_blank">website</a>. Feel free to de/select the air pollutants for a mor clear view as their acceptable concentrations are different.
+				 </p>
+			  </div>
+			</div>
+			
+			<div class="collapse" id="collapseBoxes">
+			  <div class="card card-body">
+				  <p>
+				 Each box at a given lag represents the distribution of the values across all the health events. The length of the box indicates the dispersion of the data (i.e. long boxes mean that the data is not similar across events), and the horizontal line in the box represents the median of the values. Narrow boxes could indicate that there is an underlying pattern across the health events that might be worth investigating by comparing it to random test events. Otherwise, you could group health events with similar characteristics in your analysis to explore the differences.
+				 </p>
+			  </div>
+			</div>
+			
+			<p></p>
+			The plots are interactive allowing you to click on the legend to de/select a variable, hover over the box plots to gain extra information about the values, zoom to explore a certain part of the plot in more detail and export as an image.
+			<p></p>
+			<ul>
+				<li><code class="green-codespan">Background</code>: click the background dropdown to select the weather variable to display underneath the time series plot.</li>
+				<li><code class="green-codespan">Mean values</code>: click the variable names to remove the mean value <code class="green-codespan">lines</code>, and click them again to make them appear.</li>
+				<li><code class="green-codespan">Sample variability</code>: click the variable names <code class="green-codespan">boxes</code> to include the box plot at each lag, and click them again to make them disappear.</li>
+		    </ul>
+			<p></p>			
+			<div >
+			{{data.overviewFigure}}
+			</div>
+			<p></p>
+			<h4>Overview Figure: z-scores</h4>
+			<code class="blue-codespan">Z-scores</code> of the weather and air pollution data (see <code class="blue-codespan">Data Table</code> section) are displayed following the same representation format as in the previous figure. However, the vertical axis and the colorbar indicate the <code class="blue-codespan">z-score</code> values for air pollution and weather variables respectively.
+			<p></p>	
+			{{data.zscoreFigure}}
+			<p></p>	
+			<h4>Event Figures</h4>
+			The same time series plot with pollutants represented as lines and weather conditions in the background is available for each event. 
+			 <!-- If the plots do not display well, please zoom in and out (<code class="grey-codespan">Ctrl</code> + <i class="fa fa-fw fa-angle-double-down"></i>  scroll), or unmaximize <i class="fa fa-fw fa-window-restore"></i> the window and then, maximise again <i class="fa fa-fw fa-window-maximize"></i> from your browser.-->
+			<p></p>
+			<div class="row">
+			  <div class="col-2">
+				<div class="list-group" id="list-tab-ev" role="tablist-ev">
+				 {% for ev in data.eventNameList %}
+				 <a class="list-group-item list-group-item-action" id="list-{{ev}}-list" data-toggle="list" href="#list-{{ev}}" role="tab" aria-controls="{{ev}}"><i class="fa fa-fw fa-bar-chart"></i>{{ev}}</a>
+				 {% endfor %}  
+				</div>
+			  </div>
+			  <div class="col-10">
+				<div class="tab-content" id="nav-tabContent-ev">
+					{% for ev, figure in data.eventFigures %}
+				  <div class="tab-pane fade show" id="list-{{ev}}" role="tabpanel" aria-labelledby="list-{{ev}}-list">
+					  {{figure}}
+				  </div>
+				  {% endfor %}
+				</div>
+			 </div>
+			 </div>
+		</section>
+			 		 
+		<section id="contact" >
+
+			<h2>4. Contact</h2>		
+			
+			If you have any questions please do not hesitate to contact me at:	
+			<dt> 
+				<a href="mailto:anavarro@tcd.ie">anavarro@tcd.ie</a> | 
+				<a href="https://orcid.org/0000-0002-2336-753X" target="_blank">ORCID</a> | 
+				<a href="https://www.linkedin.com/in/albert-navarro-gallinad-987902170/" target="_blank">Linkedin</a> 
+			</dt> 	
+		</section>
+		
+		<section id="acknowledgements" >
+			<h2>Acknowledgements</h2>		
+			This research was conducted with the financial support of <a href="https://helical-itn.eu/" target="_blank">HELICAL</a> as part of the European Union’s Horizon 2020 research and innovation programme under the Marie Sklodowska-Curie Grant Agreement No. 813545 at the <a href="https://www.adaptcentre.ie/" target="_blank">ADAPT Centre for Digital Content Technology</a> (grant number 13/RC/2106 P2) at <a href="https://www.tcd.ie/" target="_blank">Trinity College Dublin</a>.
+		</section>
+		
+		<script>
+		$(document).ready(function(){
+		  $("#myInput").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#myTable tr").filter(function() {
+			  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		  });
+		});
+		</script>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.20/js/jquery.dataTables.min.js"></script>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+		
+		<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+	
+		
+  </div>
+	
+	
+	
+	
+	<!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+</body>
+</html>

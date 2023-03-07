@@ -1,0 +1,98 @@
+# -- Data structure definition -----------------------------------------
+
+serdif-dataset:dataset-ee-20211221T120000-QT-20220128T130454-dsd
+        a             qb:DataStructureDefinition ;
+        rdfs:comment  "RDF Data Cube data structure definition for event-environmental linked observations (multi-measure approach) provided with variable normals and counts"@en ;
+		qb:component
+
+        # The dimensions
+			[ 	a	qb:ComponentSpecification ;
+				qb:dimension serdif-dimension:event ;
+				qb:order "1"^^xsd:int;
+				qb:componentAttachment qb:Slice  ] ,
+
+			[ 	a qb:ComponentSpecification ;
+				qb:dimension serdif-dimension:measureType ;
+				qb:order "2"^^xsd:int;
+				qb:componentAttachment qb:Slice ] ,
+
+			[ 	a qb:ComponentSpecification ;
+				qb:dimension sdmx-dimension:timePeriod ;
+				qb:order "3"^^xsd:int;
+				qb:componentAttachment qb:Slice ] ;
+
+		# The measures
+        
+        qb:component  [ a	qb:ComponentSpecification ;		qb:measure  serdif-measure:hasWindSpeedValue ] ;
+        qb:component  [ a	qb:ComponentSpecification ;		qb:measure  serdif-measure:hasNO2Value ] ;
+		[...]
+		
+        qb:component  [ a	qb:ComponentSpecification ;		qb:measure  serdif-measure:hasWindSpeedNormal ] ;
+        qb:component  [ a	qb:ComponentSpecification ;		qb:measure  serdif-measure:hasNO2Normal ] ;
+        [...]
+        
+        qb:component  [ a	qb:ComponentSpecification ;		qb:measure  serdif-measure:hasWindSpeedCount ] ;
+        qb:component  [ a	qb:ComponentSpecification ;		qb:measure  serdif-measure:hasNO2Count ] ;
+        [...]      
+
+        # slices
+		qb:sliceKey serdif:sliceByTime ;
+ .
+
+serdif:sliceByTime a qb:SliceKey;
+    rdfs:label "slice by time"@en;
+    rdfs:comment "Slice by fixing event and observation types and grouping measurements by observation time"@en;
+    qb:componentProperty serdif-dimension:refObsType, serdif-dimension:refEvent ;
+
+serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-slice-event-A-value
+  a qb:Slice;
+  qb:sliceStructure serdif-slice:sliceByTime;
+  serdif-dimension:refEvent <https://serdif.adaptcentre.ie/kg/2022/event#event-A>;
+  serdif-dimension:refObsType <https://serdif.adaptcentre.ie/kg/2022/measureType#value>;
+  qb:observation serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-event-A-value-obs-20110109T000000Z,
+    serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-event-A-value-20110110T000000Z,
+    [...]
+
+serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-event-A-obs-20110110T000000Z
+  a qb:Observation, eg:actual value;
+  qb:dataSet serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00;
+  sdmx-dimension:timePeriod "2011-01-09T00:00:00Z";
+  serdif-measure:hasWindSpeedValue "2.165"^^xsd:float;
+  serdif-measure:hasNO2Value "29.918573"^^xsd:float;
+  [...]
+  
+serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-slice-event-A-normal
+  a qb:Slice;
+  qb:sliceStructure serdif-slice:sliceByTime;
+  serdif-dimension:event <https://serdif.adaptcentre.ie/kg/2022/event#event-A>;
+  serdif-dimension:measureType <https://serdif.adaptcentre.ie/kg/2022/measureType#normal>;
+  qb:observation serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-event-A-obs-normal-January,
+  [...]
+  
+serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-event-A-obs-normal-January
+  a qb:Observation
+  qb:dataSet serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00;
+  sdmx-dimension:timePeriod "2011-01-01T00:00:00Z"^^xsd:dateTime;
+  serdif-measure:hasWindSpeedNormal "2.348202"^^xsd:float;
+  serdif-measure:hasNO2Normal "37.6"^^xsd:float;
+  [...]
+
+serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-slice-event-A-count
+  a qb:Slice;
+  qb:sliceStructure serdif-slice:sliceByTime;
+  serdif-dimension:event <https://serdif.adaptcentre.ie/kg/2022/event#event-A>;
+  serdif-dimension:measureType <https://serdif.adaptcentre.ie/kg/2022/measureType#count>;
+  qb:observation serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-event-A-obs-count-January,
+  [...]
+  
+serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00-event-A-obs-count-January
+  a qb:Observation
+  qb:dataSet serdif-dataset:dataset-ee-20211012T120000-IE-QT_2022-06-01T17%3A47%3A45.582%2B01%3A00;
+  sdmx-dimension:timePeriod "2011-01-01T00:00:00Z"^^xsd:dateTime;
+  serdif-measure:hasWindSpeedCount "89"^^xsd:float;
+  serdif-measure:hasNO2Count "217"^^xsd:float;
+  [...]
+
+
+
+

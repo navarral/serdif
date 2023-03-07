@@ -1,0 +1,330 @@
+@prefix rdf: 			<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: 			<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: 			<http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: 			<http://www.w3.org/2002/07/owl#> .
+
+@prefix dct: 			<http://purl.org/dc/terms/> .
+@prefix dcat: 			<http://www.w3.org/ns/dcat#> .
+@prefix prov:			<http://www.w3.org/ns/prov#> .
+@prefix prvt:			<http://purl.org/net/provenance/ns#> .
+@prefix foaf:			<http://xmlns.com/foaf/0.1/> .
+@prefix sp:				<http://spinrdf.org/spin#> .
+
+@prefix qb:  			<http://purl.org/linked-data/cube#> .
+
+@prefix sdmx-concept:  	<http://purl.org/linked-data/sdmx/2009/concept#> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+@prefix sdmx-measure:   <http://purl.org/linked-data/sdmx/2009/measure#> .
+@prefix sdmx-metadata:  <http://purl.org/linked-data/sdmx/2009/metadata#> .
+@prefix sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#> .
+@prefix sdmx-subject:   <http://purl.org/linked-data/sdmx/2009/subject#> .
+
+@prefix geo: 			<http://www.opengis.net/ont/geosparql#> .
+@prefix qudt: 			<http://qudt.org/schema/qudt#> .
+@prefix unit: 			<http://qudt.org/vocab/unit/> .
+@prefix time:			<http://www.w3.org/2006/time#> .
+@prefix event: 			<http://purl.org/NET/c4dm/event.owl#> .
+@prefix geohive-county: <http://data.geohive.ie/resource/county/> .
+@prefix geohive-county-geo:		<http://data.geohive.ie/pathpage/geo:hasGeometry/county/> .
+
+@prefix dpv:			<http://www.w3.org/ns/dpv#> .
+@prefix dpv-gdpr: 		<http://www.w3.org/ns/dpv-gdpr#> .
+@prefix obo:			<http://purl.obolibrary.org/obo/> .
+@prefix odrl: 			<http://www.w3.org/ns/odrl/2/> .
+
+@prefix eg:      		<http://example.org/ns#> .
+
+
+# -- Data Set ----------------------------------------------------------
+
+eg:dataset-ee-{{data.version}}-QT-{{data.queryTime}}
+	a 							qb:DataSet, geo:Feature, prov:Entity, dcat:Dataset ;
+    dct:title 					"Air pollution and climate data associated with multiple events of {{data.eventName}}"@en ;
+    rdfs:label      			"Air pollution and climate data associated with multiple events of {{data.eventName}}"@en ;
+    rdfs:comment    			"The dataset is an example result of associating air pollution and weather data subsets to particular health events of {{data.eventName}}. The subsets are obtained by aggregating land-based stations observation data relative to each event within region in {{data.countryName}} at a {{data.timeUnit}} time unit by using the {{data.aggMethod}} function. The observation data is related to a time-window prior to each event in {{data.timeUnit}}"@en ;
+    dct:description 			"The dataset is an example result of associating air pollution and weather data subsets to particular health events of {{data.eventName}}. The subsets are obtained by aggregating land-based stations observation data relative to each event within region in {{data.countryName}} at a {{data.timeUnit}} time unit by using the {{data.aggMethod}} function. The observation data is related to a time-window prior to each event in {{data.timeUnit}}"@en ;
+    # After depositing this data set in a repository uncomment the line below and substitute the DOI url link for the appropriate value
+    #dct:identifier 			"https://doi.org/10.5281/zenodo.5544257"^^xsd:anyURI ;
+    dct:hasVersion				"{{data.version}}" ;
+    dct:issued      			"{{data.queryDateTime}}"^^xsd:dateTime ;
+    dct:publisher   			{{data.publisher}} ;
+	dct:license 				<{{data.license}}> ;
+
+	# -- Themes describing the dataset ---------------------------------
+    dcat:theme
+        sdmx-subject:3.2 ,      					      # Regional and small area statistics
+        sdmx-subject:3.1 ,      					  	  # Environment
+        sdmx-subject:1.4 ,      					  	  # Health
+        <https://www.wikidata.org/entity/Q932068>		, # Environmental health
+        <https://www.wikidata.org/entity/Q1656682>		, # Event
+        <https://www.wikidata.org/entity/Q186588>		, # Time series
+        <https://www.wikidata.org/entity/Q131123>		, # Air pollution
+        <https://www.wikidata.org/entity/Q11663>		, # Weather
+        <https://www.wikidata.org/entity/Q27>			; # Ireland
+
+    # -- External data sets used to construct this data set ------------
+    dct:hasPart 				<https://www.met.ie//climate/available-data/historical-data>, <https://discomap.eea.europa.eu/map/fme/AirQualityExport.htm> ;
+
+	# -- Spatial descriptors -------------------------------------------
+	dct:Location 				"{{data.countryName}}"@en ;   	# Country
+
+	# -- Temporal descriptors ------------------------------------------
+	dcat:temporalResolution 	"{{data.timeRes}}"^^xsd:duration ;
+	dct:temporal 				eg:dataset-ee-{{data.version}}-QT-{{data.queryTime}}-temporal ;
+
+    # -- Data protection aspects ---------------------------------------
+    dpv:hasDataController 		{{data.dataController}} ;
+    dpv:hasDataSubject 			eg:DataSubject ;
+    dpv:hasLegalBasis			eg:LegalBasis ;
+	dpv:hasPersonalDataCategory	eg:PersonalDataCategory ;
+	dpv:hasProcessing			eg:AssociateEnvoToHealthEvent ;
+	dpv:hasPurpose				eg:ProcessingPurpose ;
+	dpv:hasRecipient			{{data.orcid}} ;
+	dpv:hasRight				eg:Right ;
+	dpv:hasRisk					eg:IdentificationRisk ;
+	dpv:hasTechnicalOrganisationalMeasure
+		eg:DataSetStorage ,
+		eg:HealthDataAccessControl ,
+		eg:HealthDataPseudonymisation ,
+		eg:ResearchProjectDPIA ,
+		eg:HealthDataAuthorisation ,
+		eg:Certification ,
+		eg:Consultation ,
+		eg:ResearchContract ,
+		eg:ResearchCodeOfConduct ,
+		eg:PrivacyNotice ,
+		eg:DataPolicy ,
+		eg:ResearchRiskManagementProcedure ,
+		eg:ResearchSafeguard ;
+
+	# -- Dataset use ---------------------------------------------------
+	rdfs:about 					eg:DataUse ;
+.
+
+# -- Agents ------------------------------------------------------------
+{% for orcid in data.orcidL %}{{orcid}} a prov:Person, prov:Agent, dpv:DataProcessor .
+{% endfor %}
+{% for publisher in data.publisherL %}{{publisher}} a dct:Agent .
+{% endfor %}
+
+# -- Period of time included in the data set ---------------------------
+
+eg:dataset-ee-{{data.version}}-QT-{{data.queryTime}}-temporal
+	a 						dct:PeriodOfTime ;
+	rdfs:comment    		"Time interval defined by the maximum and minimum date available taking into account all events"@en ;
+	dcat:startDate 			"{{data.startDateTime}}"^^xsd:dateTime ;
+	dcat:endDate   			"{{data.endDateTime}}"^^xsd:dateTime ;
+.
+
+# -- Data protection terms ---------------------------------------------
+
+eg:DataSubject
+	rdfs:subcClassOf 		dpv:DataSubject ;
+	rdfs:label 				"{{data.DataSubjectLabel}}" ;
+	rdfs:comment			"{{data.DataSubjectComment}}"@en ;
+    rdfs:seeAlso 			<{{data.DataSubjectUrl}}> ;
+.
+
+eg:LegalBasis
+	a						dpv:Consent ;
+	rdfs:label 				"{{data.LegalBasisLabel}}" ;
+	rdfs:comment			"{{data.LegalBasisComment}}"@en ;
+    rdfs:seeAlso 			<{{data.LegalBasisUrl}}> ;
+.
+
+eg:PersonalDataCategory
+	rdfs:subClassOf 		dpv:MedicalHealth ;
+	rdfs:label 				"Personal Health Information"@en ;
+	rdfs:comment			"{{data.PersonalDataCategoryComment}}"@en ;
+    rdfs:seeAlso 			<{{data.PersonalDataCategoryUrl}}> ;
+.
+
+eg:AssociateEnvoToHealthEvent
+	a				 		dpv:Combine, dpv:Consult ;
+	dpv:hasDataSource 		<https://www.met.ie//climate/available-data/historical-data>, <https://discomap.eea.europa.eu/map/fme/AirQualityExport.htm> ;
+	rdfs:comment			"Combining health events with environmental data to understand better the extrinsic factors that influence health outcomes. The data sources are consulted and combined using federated SPARQL queries by reasoning over location and time. Environmental observations are aggregated within the region of the health event and filtered for a specific period prior to the health event. The resulting dataset contains environmental observations associated to a set of health events related to individuals with a rare disease"@en ;
+.
+
+eg:ProcessingPurpose
+	a				 		dpv:AcademicResearch ;
+	rdfs:label 				"Academic Research"@en ;
+	rdfs:comment			"{{data.ProcessingPurposeComment}}"@en ;
+	rdfs:seeAlso 			<{{data.ProcessingPurposeUrl}}> ;
+.
+
+eg:Right
+	a						{{data.RightClass}} ;
+	rdfs:comment			"{{data.RightComment}}"@en ;
+	rdfs:seeAlso 			<{{data.RightUrl}}> ;
+.
+
+eg:IdentificationRisk
+	rdfs:subClassOf			dpv:Risk ;
+	rdfs:comment			"{{data.IdentificationRiskComment}}"@en  ;
+.
+
+eg:DataSetStorage
+	a 							dpv:StorageRestriction ;
+	dpv:measureImplementedBy	{{data.dataController}} ;
+	dpv:hasStorage				<{{data.DataSetStorageStorage}}> ;
+	dpv:hasLocation				<{{data.DataSetStorageLocation}}> ; # EU
+	dpv:hasDuration				"{{data.DataSetStorageDuration}}" ;
+	rdfs:comment				"{{data.DataSetStorageComment}}"@en ;
+.
+
+eg:HealthDataAccessControl
+	a 							dpv:AccessControlMethod ;
+	dpv:measureImplementedBy	{{data.dataController}} ;
+	rdfs:comment				"{{data.HealthDataAccessControlComment}}"@en ;
+.
+
+eg:HealthDataPseudonymisation
+	a 							dpv:PseudonymisationEncryption ;
+	dpv:measureImplementedBy	{{data.dataController}} ;
+	rdfs:comment				"{{data.HealthDataPseudonymisationComment}}"@en ;
+.
+
+eg:ResearchProjectDPIA
+	a 							dpv:DPIA ;
+	dpv:measureImplementedBy	{{data.orcid}} ;
+	dpv:hasStorage				<{{data.dpiaUrl}}> ;
+	rdfs:comment				"{{data.dpiaComment}}"@en ;
+.
+
+eg:HealthDataAuthorisation
+	a 							dpv:AuthorisationProcedure ;
+	dpv:measureImplementedBy	{{data.dataController}} ;
+	rdfs:comment				"{{data.HealthDataAuthorisationComment}}"@en ;
+.
+
+eg:Certification
+	a 							dpv:Certification ;
+	rdfs:comment				"{{data.CertificationComment}}"@en ;
+.
+eg:Consultation
+	a 							dpv:Consultation ;
+	rdfs:comment				"{{data.ConsultationComment}}"@en ;
+.
+
+eg:ResearchContract
+	a 							dpv:Contract ;
+	dpv:measureImplementedBy	{{data.dataController}} ;
+	dpv:hasDuration				"{{data.ResearchContractDuration}}" ;
+	rdfs:comment				"{{data.ResearchContractComment}}"@en ;
+.
+
+eg:ResearchCodeOfConduct
+	a 							dpv:CodeOfConduct ;
+	dpv:measureImplementedBy	{{data.dataController}} ;
+	rdfs:comment				"{{data.ResearchCodeOfConductComment}}"@en ;
+.
+
+eg:PrivacyNotice
+	a 							dpv:PrivacyNotice ;
+	dpv:measureImplementedBy	{{data.dataController}} ;
+	rdfs:comment				"{{data.PrivacyNoticeComment}}"@en ;
+.
+
+eg:DataPolicy
+	a 							dpv:Policy ;
+	rdfs:comment				"{{data.DataPolicyComment}}"@en ;
+.
+
+eg:ResearchRiskManagementProcedure
+	a 							dpv:RiskManagementProcedure ;
+	rdfs:comment				"{{data.ResearchRiskManagementProcedureComment}}"@en ;
+.
+
+eg:ResearchSafeguard
+	a 							dpv:Safeguard ;
+	rdfs:comment				"{{data.ResearchSafeguardComment}}"@en ;
+.
+
+# -- Dataset use -------------------------------------------------------
+
+eg:DataUse
+	a 							{{data.DataUseClass}} ;
+	rdfs:comment				"{{data.DataUseComment}}"@en ;
+.
+
+# -- Data structure definition -----------------------------------------
+
+eg:dataset-ee-{{data.version}}-QT-{{data.queryTime}}-dsd
+        a             qb:DataStructureDefinition ;
+        rdfs:comment  "RDF Data Cube data structure definition for historical air quality observations (multi-measure approach)"@en ;
+		qb:component
+
+        # The dimensions
+			[ 	a	qb:ComponentSpecification ;
+				qb:dimension sdmx-dimension:refArea ;
+				qb:order "1"^^xsd:int ] ,
+
+			[ 	a qb:ComponentSpecification ;
+				qb:dimension eg:refEvent ;
+				qb:order "2"^^xsd:int;
+				qb:componentAttachment qb:Slice ] ,
+
+			[ 	a qb:ComponentSpecification ;
+				qb:dimension sdmx-dimension:timePeriod ;
+				qb:order "3"^^xsd:int;
+				qb:componentAttachment qb:Slice ] ;
+
+		# The measures
+        {% for eeVar in data.eeVars %}
+        qb:component  [ a	qb:ComponentSpecification ;		qb:measure  eg:has{{eeVar}} ] ;
+        {% endfor %}
+
+        # slices
+		qb:sliceKey eg:sliceByTime ;
+ .
+
+eg:sliceByTime a qb:SliceKey;
+    rdfs:label "slice by region"@en;
+    rdfs:comment "Slice by grouping regions together, fixing area and event values"@en;
+    qb:componentProperty sdmx-dimension:refArea, sdmx-dimension:timePeriod ;
+    .
+
+# -- Dimensions and measures  ------------------------------------------
+
+# REF_AREA
+sdmx-dimension:refArea
+	a 					qb:DimensionProperty, rdf:Property ;
+    rdfs:range 			rdfs:Resource;
+    qb:concept 			sdmx-concept:refArea ;
+    rdfs:label 			"Reference Area"@en ;
+    rdfs:comment 		"The country or geographic area to which the measured statistical phenomenon relates."@en ;
+    rdfs:isDefinedBy 	<https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+.
+
+# REF_EVENT
+eg:refEvent
+	a 					qb:DimensionProperty, rdf:Property ;
+    rdfs:range 			rdfs:Resource;
+    qb:concept 			sdmx-concept:statUnit ;
+    rdfs:label 			"Reference Event"@en ;
+    rdfs:comment 		"The geolocated point in time for which information is sought and for which statistics are ultimately compiled."@en ;
+.
+
+# TIME_PERIOD
+sdmx-dimension:timePeriod
+	a 					qb:DimensionProperty, rdf:Property ;
+    rdfs:range 			rdfs:Resource;
+    qb:concept 			sdmx-concept:timePeriod ;
+    rdfs:label 			"Time Period"@en ;
+    rdfs:comment 		"The period of time or point in time to which the measured observation refers."@en ;
+    rdfs:isDefinedBy 	<https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+.
+
+{% for eeVar_nameAndUnit, eeVar_IRI, eeVar_label, eeVar_Unit, eeVar_Info in data.eeVarsD %}
+# {{eeVar_nameAndUnit}}
+{{eeVar_IRI}}
+	a              		owl:DatatypeProperty , qb:MeasureProperty ;
+	rdfs:label     		"{{eeVar_label}}"@en ;
+	rdfs:comment   		"{{eeVar_nameAndUnit}}" ;
+	rdfs:subPropertyOf  sdmx-measure:obsValue ;
+	rdfs:range     		xsd:float ;
+	unit:abbreviation 	{{eeVar_Unit}} ;
+	rdfs:seeAlso		{{eeVar_Info}} ;
+.
+{% endfor %}

@@ -1,0 +1,42 @@
+key,value
+eventName,Rare Disease A
+publisher,https://www.adaptcentre.ie/ https://www.tcd.ie/
+license,https://creativecommons.org/licenses/by-sa/4.0/
+dataController,https://www.tcd.ie/
+dataProcessor,https://orcid.org/0000-0002-2336-753X
+dataSubjectLabel,People with rare disease A
+dataSubjectComment,People with rare disease A
+dataSubjectUrl,http://example.org/data-subject
+legalBasisLabel,People that have signed a participant consent form
+legalBasisComment,The individuals eligible to participate in research project ABC signed a participant consent form
+legalBasisUrl,http://example.org/legal-basis
+personalDataCategoryLabel,Personal Health Information
+personalDataCategoryComment,"Consulting personal health information from a disease patient registry: (1) an individual patient’s electoral district, county or/and hospital location and (2) individual patient dates for diagnosis, flare events and disease activity (e.g. yyyy-mm-dd)"
+personalDataCategoryUrl,http://example.org/personal-data-category
+processingPurposeLabel,Academic Research
+processingPurposeComment,Combining clinical with environmental data to understand better the extrinsic factors that influence health outcomes in rare disease research. The data sources are consulted and combined using federated SPARQL queries by reasoning over location and time. Environmental observations are aggregated within the region of the health event and filtered for a specific period prior to the health event. The resulting dataset contains environmental observations associated to a set of health events related to individuals with a rare disease
+processingPurposeUrl,http://example.org/processing-purpose
+rightClass,dpv-gdpr:A13 dpv-gdpr:A14 dpv-gdpr:A15 dpv-gdpr:A16 dpv-gdpr:A17 dpv-gdpr:A18 dpv-gdpr:A19 dpv-gdpr:A20 dpv-gdpr:A21 dpv-gdpr:A22 dpv-gdpr:A7-3 dpv-gdpr:A77
+rightComment,"GDPR provides several rights to the data subject, whose applicability depends on the context and nature of processing taking place."
+rightUrl,http://example.org/right
+identificationRiskComment,"The dataset is considered pseudonymised since effective anonymisation was not possible without losing value of the data for research. Identification risks: (1) singling out of individual subjects, (2) linking of records or matching of data between data sets, and (3) inference of any information about individuals from the data set. (1) Individual patient dates are used to associate environmental data; which in a hospital context the hospital, the individuals could be identified due to the rare disease condition of the patients. (2) Individual patient dates could be linked to hospital attendance registries in the area, public registries, social media data and other sources. (3) The rare condition of the patients, the pseudonymised category of the data together with the location and time expressed in the environmental data could potentially lead to inferring a link even though the information is not expressly linked."
+dataSetStorageStorage,https://www.tcd.ie/
+dataSetStorageLocation,https://www.wikidata.org/entity/Q458
+dataSetStorageDuration,Indefinite
+dataSetStorageComment,ADAPT server: located on the TCD Virtual Machine and Docker cluster. Two firewalls: between the TCD subnet and the host School of Computer Science and Statistics network and TCD firewall.
+healthDataAccessControlComment,"The user requires credentials to access the data, which can only be manual approved by the data controller"
+healthDataPseudonymisationComment,Patient identifiers are used to de-identify patients' medical records within the patient registry. A linkage table exists that maps the study ID to the identifiable medical record only accessible by the data controller.
+dpiaComment,The Data Protection Impact Assessment (DPIA) was performed to assess the data processing risks to the rights and freedoms of natural persons (GDPR Art 35.1) of the research conducted in the PhD of <https://orcid.org/0000-0002-2336-753X>.
+dpiaUrl,http://example.org/dpia
+healthDataAuthorisationComment,Access is only granted manually through a request to the data controller
+certificationComment,To be updated
+consultationComment,To be updated
+researchContractDuration,Contract
+researchContractComment,Data sharing agreement signed granted to <https://orcid.org/0000-0002-2336-753X> based on the research assistant condition with the specific purpose of working on the HELICAL ITN research project
+researchCodeOfConductComment,"Data is saved on a password encrypted device; not emailed to yourself or anyone, or stored on cloud services without being encrypted; not shared with anyone else, or discussed with anyone else; and demonstrations, reports and publications about the project will not display actual individual level patient data."
+privacyNoticeComment,Research conducted under the ABC privacy notices and/or public interest litigation document
+dataPolicyComment,To be updated
+researchRiskManagementProcedureComment,To be updated
+researchSafeguardComment,To be updated
+dataUseClass,obo:DUO_0000007 obo:DUO_0000026
+dataUseComment,The dataset can only be used for researching rare disease A by researchers within the ABC project

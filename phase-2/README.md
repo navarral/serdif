@@ -10,12 +10,6 @@ The KG is made available in: https://serdif-example.adaptcentre.ie/
 This process designs an initial visual tool to grant meaningful access to domain experts.
 Run the following commands to install the necessary python libraries and deploy the SERDIF-UI:
 
-`venv/bin/python3 app.py `
-
-If the previous command does not work for you please use the following:
-
-`source venv/bin/activate`
-
 `pip install -r requirements.txt`
 
 `python app.py`
