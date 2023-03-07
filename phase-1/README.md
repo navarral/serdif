@@ -1,6 +1,4 @@
-# Phase 2 version
-
-
+# Phase 1 version
 
 ## Knowledge Graph (KG)
 
