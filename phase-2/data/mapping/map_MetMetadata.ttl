@@ -1,0 +1,180 @@
+#R2RML
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rrf: <http://kdeg.scss.tcd.ie/ns/rrf#>
+
+#RDF
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+#SOSA
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+
+#SpatioTemporal
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#>.
+@prefix serdif: <http://serdif.org/kg/datasource/>
+
+#Units
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+
+
+<#MapMetDataHlyDescription>
+ 
+	rr:logicalTable [ 
+		rr:sqlQuery """SELECT * FROM MetData_Description""";
+	] ;
+		
+	rr:subjectMap	[
+		# Watch out, you cannot use prefixes within a literal!
+		rr:template "http://serdif.org/kg/datasource/{ID}Value";
+		rr:termType rr:IRI;
+	];		
+	
+	
+	rr:predicateObjectMap [
+		rr:predicate qudt:abbreviation ;
+		rr:objectMap  [ 
+			rr:column "ID";
+			rr:termType rr:Literal;
+		];		
+   ];
+   
+   rr:predicateObjectMap [
+		rr:predicate rdfs:label ;
+		rr:objectMap  [ 
+			rr:column "ELEMENT";
+			rr:termType rr:Literal;
+		];		
+   ];
+   
+   
+   rr:predicateObjectMap [
+		rr:predicate qudt:symbol ;
+		rr:objectMap  [ 
+			rr:column "UNIT" ;
+			rr:termType rr:Literal; 
+			rr:class qudt:Unit ;
+		];		
+   ];
+	
+	rr:predicateObjectMap [
+		rr:predicate qudt:description ;
+		rr:objectMap  [ 
+			rr:column "DESCRIPTION";
+			rr:termType rr:Literal;
+		];		
+   ];	
+	
+	
+ .
+ 
+<#MapMetDataHlySynopW>
+ 
+	rr:logicalTable [ 
+		rr:sqlQuery """SELECT WCODE FROM MetData_SynopW""";
+	] ;
+		
+	rr:subjectMap	[
+		# Watch out, you cannot use prefixes within a literal!
+		rr:template "http://serdif.org/kg/datasource/wValue";
+		rr:termType rr:IRI;
+	];		
+	
+	   
+   rr:predicateObjectMap [
+		rr:predicate serdif:wcode ;
+		rr:objectMap  [ 
+			rr:template "http://serdif.org/kg/datasource/{WCODE}" ;
+			rr:termType rr:IRI; 
+		];		
+   ];
+
+.  
+
+
+<#MapMetDataHlySynopWW>
+ 
+	rr:logicalTable [ 
+		rr:sqlQuery """SELECT WWCODE FROM MetData_SynopWW""";
+	] ;
+		
+	rr:subjectMap	[
+		# Watch out, you cannot use prefixes within a literal!
+		rr:template "http://serdif.org/kg/datasource/wwValue";
+		rr:termType rr:IRI;
+	];		
+	
+	   
+   rr:predicateObjectMap [
+		rr:predicate serdif:wwcode ;
+		rr:objectMap  [ 
+			rr:template "http://serdif.org/kg/datasource//wwValue/{WWCODE}" ;
+			rr:termType rr:IRI; 
+		];		
+   ];
+
+.  
+   
+
+<#MapMetDataHlySynopWDes>
+
+	rr:logicalTable [ 
+		rr:sqlQuery """SELECT * FROM MetData_SynopW""";
+	] ;
+
+	rr:subjectMap	[
+		# Watch out, you cannot use prefixes within a literal!
+		rr:template "http://serdif.org/kg/datasource/wValue/{WCODE}" ;
+		rr:termType rr:IRI; 
+	];	
+
+	rr:predicateObjectMap [
+		rr:predicate qudt:symbol ;
+		rr:objectMap  [ 
+			rr:column "WCODE" ;
+			rr:termType rr:Literal; 
+			rr:class qudt:Unit ;
+		];		
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate qudt:description ;
+		rr:objectMap  [ 
+			rr:column "WDESCRIPTION";
+			rr:termType rr:Literal;
+		];		
+	];	
+		
+ . 
+ 
+ 
+ <#MapMetDataHlySynopWWDes>
+
+	rr:logicalTable [ 
+		rr:sqlQuery """SELECT * FROM MetData_SynopWW""";
+	] ;
+
+	rr:subjectMap	[
+		# Watch out, you cannot use prefixes within a literal!
+		rr:template "http://serdif.org/kg/datasource/wwValue/{WWCODE}" ;
+		rr:termType rr:IRI; 
+	];	
+
+	rr:predicateObjectMap [
+		rr:predicate qudt:symbol ;
+		rr:objectMap  [ 
+			rr:column "WWCODE" ;
+			rr:termType rr:Literal; 
+			rr:class qudt:Unit ;
+		];		
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate qudt:description ;
+		rr:objectMap  [ 
+			rr:column "WWDESCRIPTION";
+			rr:termType rr:Literal;
+		];		
+	];	
+		
+ . 

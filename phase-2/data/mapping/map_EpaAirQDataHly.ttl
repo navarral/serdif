@@ -1,0 +1,220 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rrf: <http://kdeg.scss.tcd.ie/ns/rrf#>
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#>.
+@prefix serdif: <http://serdif.org/kg/datasource/>
+
+
+<#MapEpaAirQDataHlySampler>
+ 
+	rr:logicalTable [ 
+		# rr:tableName "MetDataHly"
+		rr:sqlQuery """SELECT LON, LAT, DATET, STATCODE FROM EpaAirQDataHly""";
+	] ;
+		
+	rr:subjectMap	[
+		# Watch out, you cannot use prefixes within a literal!
+		rr:template "http://serdif.org/kg/datasource/pollution/EpaAirQDataHly/{STATCODE}";
+		rr:termType rr:IRI;
+		rr:class sosa:Sampler, geo:Feature;
+		rr:graph serdif:pollution;
+	];		
+	
+	rr:predicateObjectMap [
+		rr:predicate sosa:isHostedBy;
+		rr:objectMap	[
+			rr:template "http://serdif.org/kg/datasource/pollution/EpaAirQDataHly";
+			rr:termType rr:IRI;
+			rr:class sosa:Platform;
+		];
+	];
+	
+	rr:predicateObjectMap [
+		rr:predicate serdif:StationCode;
+		rr:objectMap	[
+			rr:column "STATCODE";
+			rr:termType rr:Literal;
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate geo:hasGeometry;
+		rr:objectMap	[
+			rr:template "http://serdif.org/kg/datasource/pollution/EpaAirQDataHly/{STATCODE}/{LON}_{LAT}";
+			rr:class geo:Geometry;
+			rr:termType rr:IRI;
+		];
+	];
+	
+	rr:predicateObjectMap [
+		rr:predicate sosa:madeSampling;
+		rr:objectMap	[
+			rrf:functionCall [
+	 			rrf:function <#samplingDateTime> ;
+	 			rrf:parameterBindings (
+	 				[ rr:column "DATET" ]
+	 				[ rr:column "LON" ]
+	 				[ rr:column "LAT" ] 
+	 				[ rr:column "STATCODE" ]
+	 			) ;
+	 		] ;
+			rr:termType rr:IRI;
+			rr:graph serdif:pollution;
+		];
+	]
+
+ .
+ 
+ 
+ <#MapEpaAirQDataHlySamplerGeometry>
+
+	rr:logicalTable [ 
+		# rr:tableName "MetDataHly"
+		rr:sqlQuery """SELECT LON, LAT, STATCODE FROM EpaAirQDataHly""";
+	] ;
+
+	rr:subjectMap	[
+		rr:template "http://serdif.org/kg/datasource/pollution/EpaAirQDataHly/{STATCODE}/{LON}_{LAT}";
+		rr:class geo:Geometry;
+		rr:termType rr:IRI;
+		rr:graph serdif:pollution;
+	];
+
+	rr:predicateObjectMap [
+	rr:predicate geo:asWKT;
+	rr:objectMap [ 
+		rr:template "POINT({LON} {LAT})";
+		rr:termType rr:Literal;
+		rr:datatype geo:wktLiteral;
+		];		
+	];
+
+.
+ 
+ 
+ <#MapEpaAirQDataHlyObsTimeSeries>
+ 
+	rr:logicalTable [ 
+		# rr:tableName "EpaAirQDataHly"
+		 rr:sqlQuery """SELECT * FROM EpaAirQDataHly""";
+	] ;
+		
+	rr:subjectMap [
+		rrf:functionCall [
+			rrf:function <#samplingDateTime> ;
+			rrf:parameterBindings (
+				[ rr:column "DATET" ]
+				[ rr:column "LON" ]
+				[ rr:column "LAT" ]
+				[ rr:column "STATCODE" ]
+			) ;
+		] ;
+		rr:termType rr:IRI;
+		rr:graph serdif:pollution;
+	];		
+
+    	
+	rr:predicateObjectMap [
+		rr:predicate sosa:resultTime ;
+		rr:objectMap  [ 
+			rrf:functionCall [
+	 			rrf:function <#midtcol> ;
+	 			rrf:parameterBindings (
+	 				[ rr:column "DATET" ]
+	 			) ;
+	 		] ;
+			rr:termType rr:Literal;
+			rr:datatype xsd:dateTime;
+		];		
+   ];
+   	 	
+
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:coValue;
+		rr:objectMap  [ 
+			rr:column "CO";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:so2Value;
+		rr:objectMap  [ 
+			rr:column "SO2";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:o3Value;
+		rr:objectMap  [ 
+			rr:column "O3";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:noxValue;
+		rr:objectMap  [ 
+			rr:column "NOX";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:noValue;
+		rr:objectMap  [ 
+			rr:column "NO";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:no2Value;
+		rr:objectMap  [ 
+			rr:column "NO2";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+
+		      
+ .
+ 
+ <#midtcol>
+	rrf:functionName "midtcol" ;
+	rrf:functionBody """
+		function midtcol(dtval) {
+		// date_time - "2010-01-01 09:08:00"
+		var date_time = dtval.split(" ");
+		return date_time[0] + "T" + date_time[1] + "Z" ;
+	}
+	""" ;
+.
+
+<#samplingDateTime>
+	rrf:functionName "samplingdatetime" ;
+	rrf:functionBody """
+		function samplingdatetime(dttemp, lon, lat, stcode){
+		  // date_time - "2010-01-01 09:00:00"
+		  var date_time = dttemp.split(" ");
+		  var date = date_time[0]; 
+		  // new_time - replace all : with empty space
+		  var new_time = date_time.slice(-1)[0].replace(new RegExp(":", "g"), ''); 
+		  // add date to the new time 
+		  var new_date_time = date + "T" + new_time + "Z"; 
+		  var new_date_time_lon_lat = "http://serdif.org/kg/datasource/pollution/EpaAirQDataHly/" + stcode.toString() + "/" + lon.toString() + "_" + lat.toString() + "/" + new_date_time;
+		  return new_date_time_lon_lat; 
+		}
+	""" ;
+.

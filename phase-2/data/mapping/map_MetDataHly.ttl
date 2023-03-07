@@ -1,0 +1,301 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rrf: <http://kdeg.scss.tcd.ie/ns/rrf#>
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#>.
+@prefix serdif: <http://serdif.org/kg/datasource/>
+
+
+<#MapMetDataHlySampler>
+ 
+	rr:logicalTable [ 
+		# rr:tableName "MetDataHly"
+		rr:sqlQuery """SELECT LON, LAT, DATET, STATCODE FROM MetDataHly""";
+	] ;
+		
+	rr:subjectMap	[
+		# Watch out, you cannot use prefixes within a literal!
+		rr:template "http://serdif.org/kg/datasource/weather/MetDataHly/{STATCODE}";
+		rr:termType rr:IRI;
+		rr:class sosa:Sampler, geo:Feature;
+		rr:graph serdif:weather;
+	];		
+	
+	rr:predicateObjectMap [
+		rr:predicate sosa:isHostedBy;
+		rr:objectMap	[
+			rr:template "http://serdif.org/kg/datasource/weather/MetDataHly";
+			rr:termType rr:IRI;
+			rr:class sosa:Platform;
+		];
+	];
+	
+	rr:predicateObjectMap [
+		rr:predicate serdif:StationCode;
+		rr:objectMap	[
+			rr:column "STATCODE";
+			rr:termType rr:Literal;
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate geo:hasGeometry;
+		rr:objectMap	[
+			rr:template "http://serdif.org/kg/datasource/weather/MetDataHly/{STATCODE}/{LON}_{LAT}";
+			rr:class geo:Geometry;
+			rr:termType rr:IRI;
+		];
+	];
+	
+	rr:predicateObjectMap [
+		rr:predicate sosa:madeSampling;
+		rr:objectMap	[
+			rrf:functionCall [
+	 			rrf:function <#samplingDateTime> ;
+	 			rrf:parameterBindings (
+	 				[ rr:column "DATET" ]
+	 				[ rr:column "LON" ]
+	 				[ rr:column "LAT" ] 
+	 				[ rr:column "STATCODE" ]
+	 			) ;
+	 		] ;
+			rr:termType rr:IRI;
+			rr:graph serdif:weather;
+		];
+	]
+
+ .
+ 
+ 
+ <#MapMetDataHlySamplerGeometry>
+
+	rr:logicalTable [ 
+		# rr:tableName "MetDataHly"
+		rr:sqlQuery """SELECT LON, LAT, STATCODE FROM MetDataHly""";
+	] ;
+
+	rr:subjectMap	[
+		rr:template "http://serdif.org/kg/datasource/weather/MetDataHly/{STATCODE}/{LON}_{LAT}";
+		rr:class geo:Geometry;
+		rr:termType rr:IRI;
+		rr:graph serdif:weather;
+	];
+
+	rr:predicateObjectMap [
+	rr:predicate geo:asWKT;
+	rr:objectMap [ 
+		rr:template "POINT({LON} {LAT})";
+		rr:termType rr:Literal;
+		rr:datatype geo:wktLiteral;
+		];		
+	];
+
+.
+ 
+ 
+ <#MapMetDataHlyObsTimeSeries>
+ 
+	rr:logicalTable [ 
+		# rr:tableName "MetDataHly"
+		 rr:sqlQuery """SELECT * FROM MetDataHly""";
+	] ;
+		
+	rr:subjectMap [
+		rrf:functionCall [
+			rrf:function <#samplingDateTime> ;
+			rrf:parameterBindings (
+				[ rr:column "DATET" ]
+				[ rr:column "LON" ]
+				[ rr:column "LAT" ]
+				[ rr:column "STATCODE" ]
+			) ;
+		] ;
+		rr:termType rr:IRI;
+		rr:graph serdif:weather;
+	];		
+
+    	
+	rr:predicateObjectMap [
+		rr:predicate sosa:resultTime ;
+		rr:objectMap  [ 
+			rrf:functionCall [
+	 			rrf:function <#midtcol> ;
+	 			rrf:parameterBindings (
+	 				[ rr:column "DATET" ]
+	 			) ;
+	 		] ;
+			rr:termType rr:Literal;
+			rr:datatype xsd:dateTime;
+		];		
+   ];
+   	 	
+
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:rainValue;
+		rr:objectMap  [ 
+			rr:column "RAIN";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:tempValue;
+		rr:objectMap  [ 
+			rr:column "TEMP";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:wetbValue;
+		rr:objectMap  [ 
+			rr:column "WETB";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:dewptValue;
+		rr:objectMap  [ 
+			rr:column "DEWPT";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:vapprValue;
+		rr:objectMap  [ 
+			rr:column "VAPPR";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:rhumValue;
+		rr:objectMap  [ 
+			rr:column "RHUM";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:mslValue;
+		rr:objectMap  [ 
+			rr:column "MSL";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:wdspValue;
+		rr:objectMap  [ 
+			rr:column "WDSP";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:wddirValue;
+		rr:objectMap  [ 
+			rr:column "WDDIR";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:wwValue;
+		rr:objectMap  [ 
+			rr:column "WW";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:wValue;
+		rr:objectMap  [ 
+			rr:column "W";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:sunValue;
+		rr:objectMap  [ 
+			rr:column "SUN";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:visValue;
+		rr:objectMap  [ 
+			rr:column "VIS";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:clhtValue;
+		rr:objectMap  [ 
+			rr:column "CLHT";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+   rr:predicateObjectMap [
+		rr:predicate serdif:clamtValue;
+		rr:objectMap  [ 
+			rr:column "CLAMT";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	];
+
+
+		      
+ .
+ 
+ <#midtcol>
+	rrf:functionName "midtcol" ;
+	rrf:functionBody """
+		function midtcol(dtval) {
+		// date_time - "2010-01-01 09:08:00"
+		var date_time = dtval.split(" ");
+		return date_time[0] + "T" + date_time[1] + "Z" ;
+	}
+	""" ;
+.
+
+<#samplingDateTime>
+	rrf:functionName "samplingdatetime" ;
+	rrf:functionBody """
+		function samplingdatetime(dttemp, lon, lat, stcode){
+		  // date_time - "2010-01-01 09:00:00"
+		  var date_time = dttemp.split(" ");
+		  var date = date_time[0]; 
+		  // new_time - replace all : with empty space
+		  var new_time = date_time.slice(-1)[0].replace(new RegExp(":", "g"), ''); 
+		  // add date to the new time 
+		  var new_date_time = date + "T" + new_time + "Z"; 
+		  var new_date_time_lon_lat = "http://serdif.org/kg/datasource/weather/MetDataHly/" + stcode.toString() + "/" + lon.toString() + "_" + lat.toString() + "/" + new_date_time;
+		  return new_date_time_lon_lat; 
+		}
+	""" ;
+.

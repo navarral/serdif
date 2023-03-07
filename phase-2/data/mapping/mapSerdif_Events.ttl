@@ -1,0 +1,80 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rrf: <http://kdeg.scss.tcd.ie/ns/rrf#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix event: <http://purl.org/NET/c4dm/event.owl#> .
+@prefix serdif: <http://serdif.org/kg/datasource/> .
+
+
+<#MapRandomEventsIreland_Event>
+ 
+	rr:logicalTable [ 
+		rr:sqlQuery """SELECT ID, EVENTTYPE, DATE, LAT, LON FROM RandomEventsIreland""";
+	] ;
+		
+	rr:subjectMap	[
+		# Watch out, you cannot use prefixes within a literal!
+		rr:template "http://serdif.org/kg/datasource/event/RndEvIre/{ID}";
+		rr:termType rr:IRI;
+		rr:class event:Event;
+		rr:graph serdif:event;
+	];		
+	
+	rr:predicateObjectMap [
+		rr:predicate event:sub_event;
+		rr:objectMap	[
+			rr:template "http://serdif.org/kg/datasource/event/RndEvIre/{EVENTTYPE}";
+			rr:termType rr:IRI;
+			rr:class sosa:Platform;
+		];
+	];
+	
+	rr:predicateObjectMap [
+		rr:predicate event:place;
+		rr:objectMap	[
+			rr:template "http://serdif.org/kg/datasource/event/RndEvIre/{LON}_{LAT}";
+			rr:class geo:Geometry;
+			rr:termType rr:IRI;
+			
+		];
+	];
+	
+	rr:predicateObjectMap [
+		rr:predicate event:time;
+		rr:objectMap	[
+			rr:template "{DATE}T00:00:00Z";
+			rr:termType rr:Literal;
+			rr:datatype xsd:dateTime;
+		];
+	]
+
+ .
+ 
+ 
+ <#MapRandomEventsIreland_EventGeom>
+
+	rr:logicalTable [ 
+		# rr:tableName "MetDataHly"
+		rr:sqlQuery """SELECT LAT, LON FROM RandomEventsIreland""";
+	] ;
+
+	rr:subjectMap	[
+		rr:template "http://serdif.org/kg/datasource/event/RndEvIre/{LON}_{LAT}";
+		rr:class geo:Geometry;
+		rr:termType rr:IRI;
+		rr:graph serdif:event;
+	];
+
+	rr:predicateObjectMap [
+	rr:predicate geo:asWKT;
+	rr:objectMap [ 
+		rr:template "POINT({LON} {LAT})";
+		rr:termType rr:Literal;
+		rr:datatype geo:wktLiteral;
+		];		
+	];
+
+.
