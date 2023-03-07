@@ -1,0 +1,16 @@
+id,element,unit       ,description
+rain,Precipitation Amount,mm,https://www.met.ie/climate/what-we-measure/rainfall
+temp,Air Temperature,°C,https://www.met.ie/climate/what-we-measure/temperature
+wetb,Wet Bulb Air Temperature,°C,https://www.met.ie/climate/what-we-measure/temperature
+dewpt,Dew Point Air Temperature,°C,https://www.met.ie/climate/what-we-measure/temperature
+vappr,Vapour Pressure,hpa,https://www.met.ie/climate/what-we-measure/water-vapour
+rhum,Relative Humidity,%,https://www.met.ie/climate/what-we-measure
+msl,Mean Sea Level Pressure,hPa,https://www.met.ie/climate/what-we-measure
+wdsp,Mean Hourly Wind Speed,kt,https://www.met.ie/climate/what-we-measure/wind
+wddir,Predominant Hourly wind Direction,kt,https://www.met.ie/climate/what-we-measure/wind
+ww,Synop Code Present Weather,,
+w,Synop Code Past Weather,,
+sun,Sunshine duration,hours,https://www.met.ie/climate/what-we-measure/sunshine
+vis,Visibility,m,https://www.met.ie/climate/what-we-measure
+clht,Cloud Ceiling Height,100s feet,https://www.met.ie/climate/what-we-measure
+clamt,Cloud Amount,okta,https://www.met.ie/climate/what-we-measure

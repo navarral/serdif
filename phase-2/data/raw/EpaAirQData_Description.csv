@@ -1,0 +1,16 @@
+id,element,unit,description
+pm10,Particulate Matter 10um diameter,ug/m3,https://airquality.ie/information/what-we-monitor
+pm25,Particulate Matter 2.5um diameter,ug/m3,https://airquality.ie/information/what-we-monitor
+nox,Nitrogen Oxides,ug/m3,https://airquality.ie/information/what-we-monitor
+no,Nitrogen Monoxide,ug/m3,https://airquality.ie/information/what-we-monitor
+no2,Nitrogen Dioxide,ug/m3,https://airquality.ie/information/what-we-monitor
+o3,Ozone,ug/m3,https://airquality.ie/information/what-we-monitor
+so2,Sulphur Dioxide,ug/m3,https://airquality.ie/information/what-we-monitor
+co,Carbon Monoxide,mg/m3,https://airquality.ie/information/what-we-monitor
+c6h6,Benzene,,https://airquality.ie/information/what-we-monitor
+pb,Lead,ng/m3,https://airquality.ie/information/what-we-monitor
+pah,Poly Aromatic Hydrocarbons,ng/m3,https://airquality.ie/information/what-we-monitor
+as,Arsenic,ng/m3,https://airquality.ie/information/what-we-monitor
+ni,Nickel,ng/m3,https://airquality.ie/information/what-we-monitor
+cd,Cadmium,ng/m3,https://airquality.ie/information/what-we-monitor
+hg,Mercury,ng/m3,https://airquality.ie/information/what-we-monitor
