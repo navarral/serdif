@@ -1,0 +1,378 @@
+@prefix rdf: 			<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: 			<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: 			<http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: 			<http://www.w3.org/2002/07/owl#> .
+
+@prefix dct: 			<http://purl.org/dc/terms/> .
+@prefix dcat: 			<http://www.w3.org/ns/dcat#> .
+@prefix prov:			<http://www.w3.org/ns/prov#> .
+@prefix prvt:			<http://purl.org/net/provenance/ns#> .
+@prefix foaf:			<http://xmlns.com/foaf/0.1/> .
+@prefix sp:				<http://spinrdf.org/spin#> .
+
+@prefix qb:  			<http://purl.org/linked-data/cube#> .
+
+@prefix sdmx-concept:  	<http://purl.org/linked-data/sdmx/2009/concept#> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+@prefix sdmx-measure:   <http://purl.org/linked-data/sdmx/2009/measure#> .
+@prefix sdmx-metadata:  <http://purl.org/linked-data/sdmx/2009/metadata#> .
+@prefix sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#> .
+@prefix sdmx-subject:   <http://purl.org/linked-data/sdmx/2009/subject#> .
+
+@prefix geo: 			<http://www.opengis.net/ont/geosparql#> .
+@prefix qudt: 			<http://qudt.org/schema/qudt#> .
+@prefix unit: 			<http://qudt.org/vocab/unit/> .
+@prefix time:			<http://www.w3.org/2006/time#> .
+@prefix event: 			<http://purl.org/NET/c4dm/event.owl#> .
+@prefix geohive-county: <http://data.geohive.ie/resource/county/> .
+@prefix geohive-county-geo:		<http://data.geohive.ie/pathpage/geo:hasGeometry/county/> .
+
+@prefix dpv:			<http://www.w3.org/ns/dpv#> .
+@prefix dpv-gdpr: 		<http://www.w3.org/ns/dpv-gdpr#> .
+@prefix obo:			<http://purl.obolibrary.org/obo/> .
+@prefix odrl: 			<http://www.w3.org/ns/odrl/2/> .
+
+@prefix eg:      		<http://example.org/ns#> .
+
+
+# -- Data Set ----------------------------------------------------------
+
+eg:dataset-ee-20211012T120000-QT-{{data.queryTime}} 
+	a 							qb:DataSet, geo:Feature, prov:Entity, dcat:Dataset ;
+    dct:title 					"Air pollution and climate data associated with multiple events"@en ;
+    rdfs:label      			"Air pollution and climate data associated with multiple events"@en ;   
+    rdfs:comment    			"The dataset is an example result of associating air pollution and weather data subsets to particular health events. The subsets are obtained by aggregating land-based stations observation data relative to each event within county {{data.countyName}} at a {{data.timeUnit}} time unit by using the {{data.aggMethod}} function. The observation data is related to {{data.wLag}} {{data.timeUnit}} prior to each event for a period of {{data.wLen}} {{data.timeUnit}}."@en ;
+    dct:description 			"The dataset is an example result of associating air pollution and weather data subsets to particular health events. The subsets are obtained by aggregating land-based stations observation data relative to each event within county {{data.countyName}} at a {{data.timeUnit}} time unit by using the {{data.aggMethod}} function. The observation data is related to {{data.wLag}} {{data.timeUnit}} prior to each event for a period of {{data.wLen}} {{data.timeUnit}}."@en ;
+    # After depositing this data set in a repository uncomment the line below and substitute the DOI url link for the appropriate value
+    #dct:identifier 			"https://doi.org/10.5281/zenodo.5544257"^^xsd:anyURI ;
+    dct:hasVersion				"20211012T120000" ;
+    dct:issued      			"{{data.queryDateTime}} "^^xsd:dateTime ;
+    dct:publisher   			<https://www.adaptcentre.ie/>, <https://www.tcd.ie/> ;
+	dcat:distribution 			eg:dataset-ee-20211012T120000-QT-{{data.queryTime}}-dist ;
+	dct:license 				<https://creativecommons.org/licenses/by-sa/4.0/> ;
+	
+	# -- Themes describing the dataset ---------------------------------
+    dcat:theme
+        sdmx-subject:3.2 ,      					      # Regional and small area statistics
+        sdmx-subject:3.1 ,      					  	  # Environment
+        sdmx-subject:1.4 ,      					  	  # Health
+        <https://www.wikidata.org/entity/Q929833>		, # Rare disease
+        <http://purl.obolibrary.org/obo/MONDO_0005435> 	, # Anti-neutrophil cytoplasmic antibody-associated vasculitis        
+        <https://www.wikidata.org/entity/Q932068>		, # Environmental health 
+        <https://www.wikidata.org/entity/Q186588>		, # Time series
+        <https://www.wikidata.org/entity/Q131123>		, # Air pollution
+        <https://www.wikidata.org/entity/Q11663>		, # Weather 
+        <https://www.wikidata.org/entity/Q27>			; # Ireland       
+    
+    # -- External data sets used to construct this data set ------------
+    dct:hasPart 				{{data.extDataSetsUsed}} ;
+	
+	# -- Spatial descriptors -------------------------------------------
+	dct:Location 				{{data.countyGeom}} ;   	# Counties in the Republic of Ireland
+	geo:hasGeometry 			{{data.countyGeomGeo}} ; 	# Counties in the Republic of Ireland
+	
+	# -- Temporal descriptors ------------------------------------------
+	dcat:temporalResolution 	"{{data.timeRes}}"^^xsd:duration ;
+	dct:temporal 				eg:dataset-ee-20211012T120000-QT-{{data.queryTime}}-temporal ;
+	
+	# -- RDF Data cube structure ---------------------------------------
+	qb:structure 				eg:dataset-ee-20211012T120000-QT-{{data.queryTime}}-dsd ;
+	
+	# -- Activity that constructed the data set ------------------------
+    prov:wasGeneratedBy 		eg:agg-dataset-ee-20211012T120000-QT-{{data.queryTime}} ;
+    
+    # -- Data protection aspects ---------------------------------------   
+    dpv:hasDataController 		<https://www.tcd.ie/> ;
+    dpv:hasDataSubject 			eg:AVERTPatient ;
+    dpv:hasLegalBasis			eg:AVERTPatientConsent ;
+	dpv:hasPersonalDataCategory	eg:PersonalHealthInformation ;
+	dpv:hasProcessing			eg:AssociateEnvoToHealthEvent ;
+	dpv:hasPurpose				eg:VasculitisFlareEnvoTrigger ;
+	dpv:hasRecipient			<https://orcid.org/0000-0002-2336-753X> ;
+	dpv:hasRight				eg:AVERTPatientRights ;
+	dpv:hasRisk					eg:IdentificationRisk ;					
+	dpv:hasTechnicalOrganisationalMeasure
+		eg:DataSetStorage ,
+		eg:HealthDataAccessControl ,
+		eg:HealthDataPseudonymisation ,
+		eg:ResearchProjectDPIA ,		
+		eg:HealthDataAuthorisation ,
+		eg:TCDCertification ,
+		eg:TCDConsultation ,
+		eg:ResearchContract ,
+		eg:ResearchCodeOfConduct ,
+		eg:AVERTPrivacyNotice ,
+		eg:DataPolicy ,
+		eg:ResearchRiskManagementProcedure ,
+		eg:ResearchSafeguard ;
+		
+	# -- Dataset use ---------------------------------------------------
+	rdfs:about 					eg:DataUse ;
+.
+
+# -- Distribution ------------------------------------------------------
+
+eg:dataset-ee-20211012T120000-QT-{{data.queryTime}}-dist 
+	a 							dcat:Distribution ;
+	dct:license 				<https://creativecommons.org/licenses/by-sa/4.0/> ;
+	dct:title					"Environmental data associated to particular health events example dataset"@en ;
+	rdfs:comment    			"The dataset is an example result of associating air pollution and weather data subsets to particular health events. The subsets are obtained by aggregating land-based stations observation data relative to each event within county {{data.countyName}} at a {{data.timeUnit}} time unit by using the {{data.aggMethod}} function. The observation data is related to {{data.wLag}} {{data.timeUnit}} prior to each event for a period of {{data.wLen}} {{data.timeUnit}}."@en ;
+    dct:description 			"The dataset is an example result of associating air pollution and weather data subsets to particular health events. The subsets are obtained by aggregating land-based stations observation data relative to each event within county {{data.countyName}} at a {{data.timeUnit}} time unit by using the {{data.aggMethod}} function. The observation data is related to {{data.wLag}} {{data.timeUnit}} prior to each event for a period of {{data.wLen}} {{data.timeUnit}}."@en ;
+	# After depositing this data set in a repository uncomment the line below and substitute the download link for the appropriate value
+	#dcat:downloadURL 			<https://zenodo.org/record/5544258/files/Envo-Event_data_example.ttl?download=1> ;
+	dcat:mediaType 				<https://www.iana.org/assignments/media-types/text/turtle> ;
+	dcat:byteSize 				"{{data.fileSize}}"^^xsd:decimal ;
+	dcat:temporalResolution 	"{{data.timeRes}}"^^xsd:duration ;
+.
+
+# -- Agents ------------------------------------------------------------
+
+<https://orcid.org/0000-0002-2336-753X> a prov:Person, prov:Agent, dpv:DataProcessor .
+
+<https://www.adaptcentre.ie/> a dct:Agent .
+
+<https://www.tcd.ie/> a dct:Agent .
+
+# -- Period of time included in the data set ---------------------------
+
+eg:dataset-ee-20211012T120000-QT-{{data.queryTime}}-temporal
+	a 						dct:PeriodOfTime ;
+	rdfs:comment    		"Time interval defined by the maximum and minimum date available taking into account all events"@en ;
+	dcat:startDate 			"{{data.startDateTime}}"^^xsd:dateTime ;
+	dcat:endDate   			"{{data.endDateTime}}"^^xsd:dateTime ;
+.
+
+# -- Region geometries -------------------------------------------------
+
+{{data.countyGeomGeo}} a geo:Geometry;
+	geo:asWKT {{data.countyGeomLiteral}} .
+
+# -- Data provenance and lineage ---------------------------------------
+
+eg:agg-dataset-ee-20211012T120000-QT-{{data.queryTime}}
+	# -- Type of activity ----------------------------------------------
+	a 						prov:Activity, prvt:DataCreation ;
+	# -- External data sets used in the activity -----------------------
+	prov:used  				{{data.extDataSetsUsed}} ;
+	# -- ORCID for the agent that performed the activity ---------------
+	prov:wasAssociatedWith 	<https://orcid.org/0000-0002-2336-753X>  ;
+	# -- Activity explanation for humans -------------------------------
+	rdfs:comment 			"The activity describes a SPARQL query to associate environmental data to particular health events by reasoning over location and time. The GeoSPARQL function geof:sfWithin is used to select environmental data within the region of each event, and xsd:duration to filter a specific time window prior to the event. Region = County {{data.countyName}} | Time window with a duration of {{data.wLen}} DAYS lagged {{data.wLag}} DAYS from the event"@en ;
+	# -- Query to construct the data set -------------------------------
+	prvt:usedGuideline [ 	a prvt:CreationGuideline, prvt:SPARQLquery, sp:Construct ;
+							sp:text """ 
+							{{data.queryText}}
+							"""           
+						] ; 
+.
+
+# -- Data protection terms ---------------------------------------------
+
+eg:AVERTPatient 
+	rdfs:subcClassOf 		dpv:DataSubject ; 
+	rdfs:label 				"AVERT Patient" ;
+    rdfs:seeAlso 			<https://www.tcd.ie/medicine/thkc/assets/pdf/AVERT-patient-info-sheet_RKD_v2.1_May-2018.pdf> ;
+.
+
+eg:AVERTPatientConsent
+	a						dpv:Consent ;
+	rdfs:comment			"The individuals elegible to participate in the AVERT research project signed a participant consent form"@en ;
+	rdfs:seeAlso			<https://www.tcd.ie/medicine/thkc/assets/pdf/AVERT_Participant%20Consent%20Form%20RKD_v2_May%202018.pdf> ;
+.	
+
+eg:PersonalHealthInformation
+	rdfs:subClassOf 		dpv:MedicalHealth ;
+	rdfs:label 				"Personal Health Information"@en ;
+	rdfs:comment			"Consulting personal health information from a disease patient registry: (1) an individual patient’s electoral district, county or/and hospital location and (2) individual patient dates for diagnosis, flare events and disease activity (e.g. yyyy-mm-dd)"@en
+.
+
+eg:AssociateEnvoToHealthEvent 
+	a				 		dpv:Combine, dpv:Consult ;
+	dpv:hasDataSource 		{{data.extDataSetsUsed}} ;
+	rdfs:comment			"Combining clinical with environmental data to understand better the extrinsic factors that influence health outcomes in rare disease research. The data sources are consulted and combined using federated SPARQL queries by reasoning over location and time. Environmental observations are aggregated within the region of the health event and filtered for a specific period prior to the health event. The resulting dataset contains environmental observations associated to a set of health events related to individuals with a rare disease"@en ;
+.
+
+eg:VasculitisFlareEnvoTrigger
+	a				 		dpv:AcademicResearch ;
+	rdfs:comment			"The processing of the data is only conducted for the scientific purpose set by the data controller. The principal purpose is to investigate whether environment factors can trigger a flare of vasculitis. For example, vasculitis may be more common in the winter. We will try to find out whether various infections (such as flu), pollution or a change in the weather trigger the disease."@en ;
+	rdfs:seeAlso 			<https://www.tcd.ie/medicine/thkc/assets/pdf/AVERT-patient-info-sheet_RKD_v2.1_May-2018.pdf> ;
+.
+
+eg:AVERTPatientRights
+	a						dpv-gdpr:A20, dpv-gdpr:A21 ;
+	rdfs:seeAlso			<https://www.tcd.ie/medicine/thkc/assets/pdf/AVERT-patient-info-sheet_RKD_v2.1_May-2018.pdf> ;
+.
+
+eg:IdentificationRisk				
+	rdfs:subClassOf			dpv:Risk ;
+	rdfs:comment			"The dataset is considered pseudonymised since effective anonymisation was not possible without losing value of the data for research. Identification risks: (1) singling out of individual subjects, (2) linking of records or matching of data between data sets, and (3) inference of any information about individuals from the data set. (1) Individual patient dates are used to associate environmental data, which in the context of the hospital the individuals could be identified due to the rare disease condition of the patients. (2) Individual patient dates could be link to hospital attendance registries in the area, public registries, social media data and other sources. (3) The rare condition of the patients, the pseudonymised category of the data together with the location and time expressed in the environmental data could potentially lead to inferring a link even though the information is not expressly linked."@en ;								
+.
+
+eg:DataSetStorage
+	a 							dpv:StorageRestriction ;
+	dpv:measureImplementedBy	<https://www.tcd.ie/> ;
+	dpv:hasStorage				<https://www.tcd.ie/> ;
+	dpv:hasLocation				<https://www.wikidata.org/entity/Q458> ; # EU
+	dpv:hasDuration				"Indefinite" ;
+	rdfs:comment				"ADAPT server: located on the TCD Virtual Machine and Docker cluster. Two firewalls: between the TCD subnet and the host School of Computer Science and Statistics network and TCD firewall."@en ;
+.
+
+eg:HealthDataAccessControl 
+	a 							dpv:AccessControlMethod ;
+	dpv:measureImplementedBy	<https://www.tcd.ie/> ;
+	rdfs:comment				"The user requires credentials to access the data, which can only be manual approved by the data controller"@en ;
+.
+
+eg:HealthDataPseudonymisation 
+	a 							dpv:PseudonymisationEncryption ;
+	dpv:measureImplementedBy	<https://www.tcd.ie/> ;
+	rdfs:comment				"Patient identifiers are used to de-identify patients's medical records within the patient ragistry. A linkage table exists that maps the study ID to the identifiable medical record only accessible by the data controller."@en ;
+.
+
+eg:ResearchProjectDPIA 
+	a 							dpv:DPIA ;
+	dpv:measureImplementedBy	<https://orcid.org/0000-0002-2336-753X> ;
+	dpv:hasStorage				<https://docs.google.com/document/d/1ScGlzrxKjByFDAGUxaKdqX3k-dhfr3MM/edit> ;
+	rdfs:comment				"The Data Protection Impact Assessment (DPIA) was performed to assess the data processing risks to the rights and freedoms of natural persons (GDPR Art 35.1) of the research conducted in the PhD of <https://orcid.org/0000-0002-2336-753X>."@en ;
+.
+
+eg:HealthDataAuthorisation 
+	a 							dpv:AuthorisationProcedure ;
+	dpv:measureImplementedBy	<https://www.tcd.ie/> ;
+	rdfs:comment				"Access is only granted manually through a request to the data controller"@en ;
+.
+
+eg:TCDCertification 
+	a 							dpv:Certification ;
+	rdfs:comment				"To be updated"@en ;
+.
+eg:TCDConsultation 
+	a 							dpv:Consultation ;
+	rdfs:comment				"To be updated"@en ;
+.
+
+eg:ResearchContract 
+	a 							dpv:Contract ;
+	dpv:measureImplementedBy	<https://www.tcd.ie/> ;
+	dpv:hasDuration				"Contract" ; 
+	rdfs:comment				"Data sharing aggrement signed granted to <https://orcid.org/0000-0002-2336-753X> based on the research assistant condition with the specific purpose of working on the HELICAL ITN research project"@en ;
+.
+
+eg:ResearchCodeOfConduct
+	a 							dpv:CodeOfConduct ;
+	dpv:measureImplementedBy	<https://www.tcd.ie/> ;
+	rdfs:comment				"Data is saved on a password encrypted device; not emailed to yourself or anyone, or stored on cloud services without being encrypted; not shared with anyone else, or discussed with anyone else; and	demonstrations, reports and publications about the project will not display actual individual level patient data."@en ;
+.	
+	
+eg:AVERTPrivacyNotice 
+	a 							dpv:PrivacyNotice ;
+	dpv:measureImplementedBy	<https://www.tcd.ie/> ;
+	rdfs:comment				"Research conducted under the AVERT privacy notices and/or public interest litigation document"@en ;
+.
+
+eg:DataPolicy 
+	a 							dpv:Policy ;
+	rdfs:comment				"To be updated"@en ;
+.
+	
+eg:ResearchRiskManagementProcedure
+	a 							dpv:RiskManagementProcedure ;
+	rdfs:comment				"To be updated"@en ;
+.
+	
+eg:ResearchSafeguard 
+	a 							dpv:Safeguard ;
+	rdfs:comment				"To be updated"@en ;
+.
+
+# -- Dataset use -------------------------------------------------------
+
+eg:DataUse	
+	a 							obo:DUO_0000007, obo:MONDO_0005435, obo:DUO_0000026 ;
+	rdfs:comment				"The dataset can only be used for researching anti-neutrophil antibody associated vasculitis by researchers within the AVERT or HELICAL projects"@en ;
+.
+
+# -- Data structure definition -----------------------------------------
+
+eg:dataset-ee-20211012T120000-QT-{{data.queryTime}}-dsd
+        a             qb:DataStructureDefinition ;
+        rdfs:comment  "RDF Data Cube data structure definition for historical air quality observations (multi-measure approach)"@en ;
+		qb:component
+		
+        # The dimensions
+			[ 	a	qb:ComponentSpecification ;
+				qb:dimension sdmx-dimension:refArea ;		
+				qb:order "1"^^xsd:int ] ,
+				
+			[ 	a qb:ComponentSpecification ;
+				qb:dimension eg:refEvent ; 				
+				qb:order "2"^^xsd:int; 
+				qb:componentAttachment qb:Slice ] ,
+				
+			[ 	a qb:ComponentSpecification ;
+				qb:dimension sdmx-dimension:timePeriod ; 	
+				qb:order "3"^^xsd:int; 
+				qb:componentAttachment qb:Slice ] ;
+				
+		# The measures
+        {% for eeVar in data.eeVars %}
+        qb:component  [ a	qb:ComponentSpecification ;		qb:measure  eg:has{{eeVar}} ] ;
+        {% endfor %}
+        
+        # slices
+		qb:sliceKey eg:sliceByTime ;
+ .
+
+eg:sliceByTime a qb:SliceKey;
+    rdfs:label "slice by region"@en;
+    rdfs:comment "Slice by grouping regions together, fixing area and event values"@en;
+    qb:componentProperty sdmx-dimension:refArea, sdmx-dimension:timePeriod ;
+    .
+
+# -- Dimensions and measures  ------------------------------------------
+
+# REF_AREA
+sdmx-dimension:refArea 
+	a 					qb:DimensionProperty, rdf:Property ;
+    rdfs:range 			rdfs:Resource;
+    qb:concept 			sdmx-concept:refArea ;
+    rdfs:label 			"Reference Area"@en ;
+    rdfs:comment 		"The country or geographic area to which the measured statistical phenomenon relates."@en ;
+    rdfs:isDefinedBy 	<https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+.
+
+# REF_EVENT
+eg:refEvent 
+	a 					qb:DimensionProperty, rdf:Property ;
+    rdfs:range 			rdfs:Resource;
+    qb:concept 			sdmx-concept:statUnit ;
+    rdfs:label 			"Reference Event"@en ;
+    rdfs:comment 		"The geolocated point in time for which information is sought and for which statistics are ultimately compiled."@en ;
+.
+
+# TIME_PERIOD
+sdmx-dimension:timePeriod 
+	a 					qb:DimensionProperty, rdf:Property ;
+    rdfs:range 			rdfs:Resource;
+    qb:concept 			sdmx-concept:timePeriod ;
+    rdfs:label 			"Time Period"@en ;
+    rdfs:comment 		"The period of time or point in time to which the measured observation refers."@en ;
+    rdfs:isDefinedBy 	<https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+.
+
+{% for eeVar_nameAndUnitUpper, eeVar, eeVar_lowerCase,
+eeVar_nameAndUnit, eeVar_Unit, eeVar_eeInfo, eeVar_EnvoVocLink in data.eeVarsD %}
+# {{eeVar_nameAndUnitUpper}}
+eg:has{{eeVar}}
+	a              		owl:DatatypeProperty , qb:MeasureProperty ;
+	rdfs:label     		"{{eeVar_lowerCase}}"@en ;
+	rdfs:comment   		"{{eeVar_nameAndUnit}}" ;
+	rdfs:subPropertyOf  sdmx-measure:obsValue ;
+	rdfs:range     		xsd:float ;
+	unit:abbreviation 	{{eeVar_Unit}} ;
+	rdfs:seeAlso	
+		<{{eeVar_eeInfo}}> ,
+		<{{eeVar_EnvoVocLink}}> ;
+.
+{% endfor %}
