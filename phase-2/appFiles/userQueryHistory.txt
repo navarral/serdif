@@ -1,0 +1,22 @@
+{
+    "20210419T134354": {
+        "QDateTime": "2021-04-19 13:43:54.703017+00:00",
+        "Rare Disease": "ANCA vasculitis - Ireland",
+        "eoi": "Definite",
+        "loi": "DUBLIN",
+        "wLen": "30",
+        "wLag": "7",
+        "timeUnit": "Daily",
+        "timeAgg": "AVG"
+    },
+    "20210419T144645": {
+        "QDateTime": "2021-04-19 13:46:45.945902+00:00",
+        "Rare Disease": "ANCA vasculitis - Ireland",
+        "eoi": "Definite",
+        "loi": "DUBLIN",
+        "wLen": "30",
+        "wLag": "7",
+        "timeUnit": "Daily",
+        "timeAgg": "AVG"
+    }
+}

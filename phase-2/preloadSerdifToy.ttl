@@ -1,0 +1,26 @@
+#
+# Configuration template for a GraphDB-Free repository
+#
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rep: <http://www.openrdf.org/config/repository#>.
+@prefix sr: <http://www.openrdf.org/config/repository/sail#>.
+@prefix sail: <http://www.openrdf.org/config/sail#>.
+@prefix owlim: <http://www.ontotext.com/trree/owlim#>.
+
+[] a rep:Repository ;
+    rep:repositoryID "serdifToy" ;
+    rdfs:label "HELICAL project triplestore example" ;
+    rep:repositoryImpl [
+        rep:repositoryType "graphdb:FreeSailRepository" ;
+        sr:sailImpl [
+            sail:sailType "graphdb:FreeSail" ;
+
+                        # Enable context index(because my data do not uses contexts)
+                        owlim:enable-context-index "true" ;
+
+                        # indexes to speed up the read queries
+                        owlim:enablePredicateList "true" ;
+                        owlim:enable-literal-index "true" ;
+                        owlim:in-memory-literal-properties "true" ;
+        ]
+    ].
