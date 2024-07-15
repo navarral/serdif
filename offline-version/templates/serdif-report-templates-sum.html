@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+
+ 	<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Font Awesome -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+       
+   
+   
+	<style>
+		
+		.main-layout {
+		  margin: 5%; 
+		  font-size: 1rem; 
+		  padding: 0px 0px;
+		  font-family: "Lato", sans-serif;
+		  min-height: 100vh;
+		  min-height: 100dvh;
+		  display: block;
+		  grid-template-rows:
+			auto
+			1fr
+			auto;	  
+		text-align: justify;
+		text-justify: inter-word;		  
+		}
+		
+		h1,h2,h3,h4 {	
+		color: #005A9C;
+		}
+		
+		h2,h3,h4 {	
+		padding-top: 0.5rem;
+		}
+		
+		label {
+		  color: #005A9C;
+		  font-weight: 600;
+		}
+		
+		.alert {
+		  position: relative;
+		  padding: 0.5rem 1rem;
+		  margin-bottom: 1rem;
+		  border: 1px solid transparent;
+		  border-radius: .25rem;
+		  background-color: #fff3cd;
+		  color: #664d03;
+		}
+		
+		.prov-grid{
+			display: grid;
+			gap: 0.5rem;
+		}
+		
+		.prov-group{
+			display: grid;
+		}
+		
+		.prov-group--full-width{
+			grid-column: 1 / -1;		
+		}
+		
+		.green-codespan {
+		  color:    #1e8449 ;
+		  background-color:   #e9f7ef  ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  font-size: 90%;
+		}
+		
+		.blue-codespan {
+		  color:  #1f618d;
+		  background-color:  #eaf2f8;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  font-size: 90%;
+		}
+		
+		.section-codespan {
+		  color:  #1f618d;
+		  background-color:  transparent;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  font-size: 90%;
+		}
+		
+		.lightblue-codespan {
+		  color:   #03a9f4 ;
+		  background-color:  #e1f5fe;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  font-size: 90%;
+		}
+		
+		.red-codespan {
+		  color:   #a93226 ;
+		  background-color: #fadbd8 ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  font-size: 90%;
+		}
+		
+		.orange-codespan {
+		  color:   #d35400 ;
+		  background-color:   #f6ddcc  ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  font-size: 90%;
+		}
+		
+		.grey-codespan {
+		  color:   #515a5a  ;
+		  background-color:  #ccd1d1  ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  font-size: 90%;
+		}
+		
+	table{
+			border-collapse: collapse;
+			text-align: center;
+			width: 100%;
+		}
+		
+		th, td {
+		  padding: 1rem;
+		}
+		
+		th {
+		  background: hsl(204 64% 34% / 0.4);	
+		}
+		
+		tr:nth-of-type(2n) {
+			background: hsl(204 64% 34% / 0.1);	
+		}
+		
+		.table-container {
+		  max-width: 100%;
+		  overflow-x: auto;
+		}
+		
+		@media (max-width: 650px){
+		  
+		  th {
+			display: none;
+		  }
+		  
+		  td {
+			display: grid;  
+			grid-template-columns: 15ch auto;
+			padding: 0.5rem 1rem;
+			border: none;
+		   }
+		   
+		   td::before {
+			   content: attr(data-cell) ": ";
+			   font-weight: 700;
+			}
+			
+			td:first-child {
+			  padding-top: 2rem;
+		   }
+		   
+		   td:last-child {
+			  padding-bottom: 2rem;
+		   }
+		   
+		}
+
+	</style>
+     
+<title>SERDIF Report</title>
+  
+</head>
+<body>    
+    <div class="main-layout">
+		<header>
+			<h1 id="title">SERDIF: Event Spatiotemporal Linked Data</h1>
+			<h4 style="color:grey">{{data.date}}</h4> 
+			<div class="alert">
+				<p>
+				The <b>aim of this interactive report is to make the linked data easier to understand</b>  rather than if you looked at the raw data in knowledge graph or data table formats.
+				</p>
+				<p>
+				<b>Remember:</b> if the event data from your input is <b>considered personal data</b>,
+				you require <b>explicit permission</b>  from the data controller and/or Data Protection Officer
+				assigned to the data for <u>accessing</u>, <u>using</u> and <u>processing</u> the data. <b>Further approval</b>  is needed
+				if the intend is to <u>share</u> the data with others or <u>deposit</u>  the data in an open data repository. 
+				</p>
+				<p class="copyright"> © 2023 - Copyright: <a href="https://orcid.org/0000-0002-2336-753X" target="_blank">Albert Navarro-Gallinad</a> (Last update: May 2023)  </p>
+			</div>		
+			<div class="alert" style="background-color:#eaf2f8;color:  #1f618d;">
+				The plots in this report are  <b>interactive</b> allowing you to click on the legend to de/select a variable, hover over the box plots to gain extra information about the values, zoom to explore a certain part of the plot in more detail and export as an image.
+			</div>
+		</header>
+		
+		<main>
+			<section id="provenance" >
+				<h2>Data Provenance</h2>
+				<p>
+				The linked data represents the input spatiotemporal datasets linked with your input events based on the linkage options selected in the  SERDIF User Interface (UI). 
+				</p>
+				<div class="prov-grid">
+					
+					<div class="prov-group prov-group--full-width">
+						<label for="map"><i class="fa fa-fw fa-street-view"></i>Datasets linked with your events</label>
+						
+						<div id="map">
+							<p>
+							The spatial linkage options that you have selected are: <code class="blue-codespan">{{data.spOption1}}</code>. The following interactive map represents the spatial linkage between <code class="orange-codespan">events</code> and <code class="green-codespan">datasets</code>. 
+							</p>
+							{{data.datasetmap}}
+							<p></p>
+						</div>	
+					</div>
+					
+					<div class="prov-group prov-group--full-width">
+						<label for="timewindow"><i class="fa fa-fw fa-calendar"></i>Datasets time windows per event group</label>
+						<div id="timewindow">
+							<p>
+							The timeline plot represents the <code class="blue-codespan">time-window</code> of gathered data for each event. The <code class="blue-codespan">time-window</code> is defined by the event's date, lag and length that you have inputted.
+							</p>
+							
+							{{data.timeline}}
+							
+							<p>
+							You chose the <code class="blue-codespan">{{data.aggMethod}}</code> method to integrate the spatiotemporal data within the selected <code class="green-codespan">area</code> and <code class="green-codespan">time window</code> at the <code class="blue-codespan">{{data.timeUnit}}</code> time unit.		
+							</p>
+						</div>	
+					</div>
+											
+						<div class="prov-group">
+						<label for="sharing"><i class="fa fa-fw fa-shield"></i>Dataset descriptors</label>
+						<div id="sharing">
+							<p> 
+							The <code class="blue-codespan">Data Recipient</code> is responsible for seeking approval from the <code class="blue-codespan">Data controller</code> before sharing or publishing the data with third parties that do not have access to the health data consulted during the <code class="blue-codespan">Data processing</code>. 
+						  </p>
+						  <ul>
+							<li><code class="blue-codespan">Data controller</code>: {{data.dataController}}
+							</li>
+							<li><code class="blue-codespan">Data processing</code>: input health events (i.e. location and time) have been consulted to align and combine surface atmospheric data; therefore, linking spatiotemporal data to individual health events. </li>
+							<li><code class="blue-codespan">Data Recipient</code>: {{data.orcid}} </li><li><code class="blue-codespan">License</code>: <a href="{{data.license}} " target="_blank">{{data.license}}</a></li>					
+							<li><code class="blue-codespan">Identification risk</code>: the dataset is considered pseudonymised since effective anonymisation was not possible without losing value of the data for research during the linkage process. This is because individual event dates and locations/areas can be inferred from the spatiotemporal datasets, which combine with health event information (e.g. a disease condition) could provide enough context to reidentify an individual.  The impact of the context on anonymization has to be assessed for each case. </li>	  
+						  </ul>
+						</div>					
+					</div>
+				
+				</div>
+			</section>
+			
+			<section id="dataTable" >
+				<h2></i>Data Table: linked data summarised by event group</h2>
+				<div class="alert alert-warning" role="alert">
+				The raw linked data table (see <u>ds_{{data.queryTimeStr}}_raw.csv</u>) has a <b>{{data.dataTableMissing}}% of missing values.</b> This percentage can be reduced by increasing the size of the area/distance or increasing the time unit (e.g. days -> month) during the linkage options selection in the SERDIF UI.
+				</div>	
+				<div class="table-container">
+					{{data.dataTable}}
+				</div>
+			</section>
+			
+			<section id="timeseries" >
+				<h2 id="exploration">Time series per event group</h2>
+				<p>
+				The linked data per event group is presented as a <code class="blue-codespan">time series plot</code> that combines <code class="orange-codespan">variables</code> (lines - left axis) per <code class="orange-codespan">lag unit</code> (days, months or years previous to the event - bottom axis). 
+				</p>
+				<p>
+				The plot represents the <code class="green-codespan">mean value</code> of each variable per lag with the possibility to plot the raw value value distribution previous to computing the mean (<code class="green-codespan">sample variability</code>).
+				</p>
+				<div >
+				{{data.tsFigure}}
+				</div>
+			</section>
+			
+			<section id="distribution" >
+				<h2 id="exploration">Value distribution per event group</h2>
+				<p>
+				The linked data per event group is presented as a <code class="blue-codespan">distribution plot</code> that combines <code class="orange-codespan">values</code> (variable magnitude - bottom axis) per <code class="orange-codespan">variable</code> (lines - left axis). 
+				</p>
+				<div >
+				{{data.distFigure}}
+				</div>
+			</section>
+			
+			
+			
+			<section id="contact" >
+
+				<h2>Contact</h2>		
+				
+				If you have any questions please do not hesitate to contact me at:	
+				<dt> 
+					<a href="mailto:anavarro@tcd.ie">anavarro@tcd.ie</a> | 
+					<a href="https://orcid.org/0000-0002-2336-753X" target="_blank">ORCID</a> | 
+					<a href="https://www.linkedin.com/in/albert-navarro-gallinad-987902170/" target="_blank">Linkedin</a> 
+				</dt> 	
+			</section>
+			
+			<section id="acknowledgements" >
+				<h2>Acknowledgements</h2>		
+				This research was conducted with the financial support of <a href="https://helical-itn.eu/" target="_blank">HELICAL</a> as part of the European Union’s Horizon 2020 research and innovation programme under the Marie Sklodowska-Curie Grant Agreement No. 813545 at the <a href="https://www.adaptcentre.ie/" target="_blank">ADAPT Centre for Digital Content Technology</a> (grant number 13/RC/2106 P2) at <a href="https://www.tcd.ie/" target="_blank">Trinity College Dublin</a>.
+				<p></p>
+			</section>
+			
+		</main>
+		
+		<footer>
+			<p class="copyright"> © 2023 - Copyright: <a href="https://orcid.org/0000-0002-2336-753X" target="_blank">Albert Navarro-Gallinad</a> (Last update: May 2023)  </p>
+		</footer>
+    
+    </div>
+    
+
+</body>
+
+
+</html>

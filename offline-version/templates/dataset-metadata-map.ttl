@@ -1,0 +1,150 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rrf: <http://kdeg.scss.tcd.ie/ns/rrf#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix geosparql: <http://www.opengis.net/ont/geosparql#> .
+@prefix locn:	<http://www.w3.org/ns/locn#> .
+@prefix serdif-dataset: <https://serdif.adaptcentre.ie/kg/2023/dataset#> .
+
+
+<#MapObsData>
+ 
+	rr:logicalTable [ rr:tableName "{{data.dsName}}" ] ;
+		
+	rr:subjectMap [
+		rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#{DSNAME}&point={LONGITUDE}_{LATITUDE}" ;
+		rr:termType rr:IRI ;
+		rr:class dcat:Distribution ;
+		rr:graphMap [ rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset/metadata/{{data.dsName}}" ] ;
+	] ;
+	
+	rr:predicateObjectMap [
+		rr:predicate dct:license ;
+		rr:objectMap  [ 
+			rr:column "LICENSE" ;
+			rr:termType rr:IRI ;
+		] ;	
+	] ;
+
+    rr:predicateObjectMap [
+		rr:predicate dct:title ;
+		rr:objectMap  [ 
+            rr:column "DSNAME" ;
+			rr:termType rr:Literal ;
+		] ;	
+	] ;
+
+    rr:predicateObjectMap [
+		rr:predicate dct:description ;
+		rr:objectMap  [ 
+			rr:template "Time series dataset with obervations from point({LONGITUDE} {LATITUDE})" ;
+			rr:termType rr:Literal ;
+		] ;	
+	] ;
+	
+	rr:predicateObjectMap [
+		rr:predicate dcat:downloadURL ;
+		rr:objectMap  [ 
+			rr:column "URL" ;
+			rr:termType rr:IRI ;
+		] ;	
+	] ;
+	
+	rr:predicateObjectMap [
+		rr:predicate dcat:byteSize ;
+		rr:objectMap  [ 
+			rr:column "SIZE" ;
+			rr:termType rr:Literal ;
+			rr:datatype xsd:float ;
+		] ;		
+	] ;
+	
+	rr:predicateObjectMap [
+		rr:predicate dcat:temporalResolution ;
+		rr:objectMap  [ 
+			rr:column "TIMERES" ;
+			rr:termType rr:Literal ;
+			rr:datatype xsd:duration ;
+		] ;		
+	] ;
+
+    rr:predicateObjectMap [
+		rr:predicate dcat:temporal ;
+		rr:objectMap  [ 
+			rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#{DSNAME}&point={LONGITUDE}_{LATITUDE}-temporal" ;
+			rr:termType rr:BlankNode ;
+		] ;		
+	] ;
+
+    rr:predicateObjectMap [
+		rr:predicate dcat:spatial ;
+		rr:objectMap  [ 
+			rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#{DSNAME}&point={LONGITUDE}_{LATITUDE}-spatial" ;
+			rr:termType rr:BlankNode ;
+		] ;		
+	] ;
+	
+.
+
+<#temporal>
+    rr:logicalTable [ rr:tableName "{{data.dsName}}" ] ;
+    
+    rr:subjectMap [
+		rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#{DSNAME}&point={LONGITUDE}_{LATITUDE}-temporal" ; 
+        rr:termType rr:BlankNode ;
+		rr:class dct:PeriodOfTime ;
+        rr:graphMap [ rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset/metadata/{{data.dsName}}" ] ;
+    ] ;
+    
+    rr:predicateObjectMap [
+		rr:predicate dcat:startDate ;
+		rr:objectMap  [ 
+			rr:column "START" ;	
+			rr:termType rr:Literal ;
+			rr:datatype xsd:dateTime ;
+		] ;		
+   ] ;
+   
+   rr:predicateObjectMap [
+		rr:predicate dcat:endDate ;
+		rr:objectMap  [ 
+			rr:column "END" ;
+			rr:termType rr:Literal ;
+			rr:datatype xsd:dateTime ;
+		] ;		
+   ] ;
+.
+
+<#spatial>
+    rr:logicalTable [ rr:tableName "{{data.dsName}}" ] ;
+    
+    rr:subjectMap [
+		rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#{DSNAME}&point={LONGITUDE}_{LATITUDE}-spatial" ; 
+        rr:termType rr:BlankNode ;
+		rr:class dct:Location ;
+        rr:graphMap [ rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset/metadata/{{data.dsName}}" ] ;
+    ] ;
+    
+    rr:predicateObjectMap [
+		rr:predicate locn:geometry ;
+		rr:objectMap  [ 
+			rr:template "POINT({LONGITUDE} {LATITUDE})" ;
+			rr:termType rr:Literal ;
+			rr:datatype geosparql:wktLiteral ;
+		] ;		
+   ] ;
+.
+
+<#time2datetime>
+	rrf:functionName "time2datetime" ;
+	rrf:functionBody """
+		function time2datetime(timeC) {
+		// From 2010-01-01 to 2010-01-01T00:00:00
+		return String(timeC ) + "T00:00:00" ;
+	}
+	""" ;
+.

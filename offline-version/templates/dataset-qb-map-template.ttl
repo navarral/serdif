@@ -1,0 +1,165 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rrf: <http://kdeg.scss.tcd.ie/ns/rrf#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix serdif-measure: <https://serdif.adaptcentre.ie/kg/2023/measure#> .
+@prefix serdif-dimension: <https://serdif.adaptcentre.ie/kg/2023/dimension#> .
+@prefix sdmx-dimension:  <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix qb:  <http://purl.org/linked-data/cube#>.
+@prefix geosparql: <http://www.opengis.net/ont/geosparql#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix locn: <http://www.w3.org/ns/locn#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+
+<#MapSlice>
+
+rr:logicalTable [ rr:tableName "{{data.dsNameCSV}}" ] ;
+
+	rr:subjectMap [
+        rrf:functionCall [
+ 			rrf:function <#eventNameSlice> ;
+ 			rrf:parameterBindings (
+ 				[ rr:column "ID" ; ]
+ 			) ;
+ 		] ;
+		rr:termType rr:IRI ;
+		rr:class qb:Slice ;
+		rr:graphMap [ rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#user={{data.user}}&querytime={{data.qTime}}" ] ;
+	];
+
+    rr:predicateObjectMap [
+		rr:predicate qb:sliceStructure;
+		rr:objectMap	[
+            rr:template "https://serdif.adaptcentre.ie/kg/2023/slice#sliceByTime" ;
+			rr:termType rr:IRI ;
+		];
+	];	
+	
+	rr:predicateObjectMap [
+		rr:predicate qb:observation;
+		rr:objectMap	[
+            rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#{{data.dsName}}&prov={PROV}&point={LONGITUDE}_{LATITUDE}&time={TIME}" ;
+			rr:termType rr:IRI ;
+            rr:class qb:Observation, time:TimePosition ;
+		];
+	];
+
+    rr:predicateObjectMap [
+		rr:predicate serdif-dimension:area ;
+		rr:objectMap  [ 
+			rr:template "POINT({LONGITUDE} {LATITUDE})" ;
+			rr:termType rr:Literal ;
+			rr:datatype geosparql:wktLiteral ;
+		] ;		
+   ] ;
+	
+.
+ 
+
+<#MapObsData>
+ 
+	rr:logicalTable [ rr:tableName "{{data.dsNameCSV}}" ] ;
+		
+	rr:subjectMap [
+		rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#{{data.dsName}}&prov={PROV}&point={LONGITUDE}_{LATITUDE}&time={TIME}" ;
+		rr:termType rr:IRI ;
+		rr:class qb:Observation, time:TimePosition ;
+		rr:graphMap [ rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#user={{data.user}}&querytime={{data.qTime}}" ] ;
+	];		
+	
+	rr:predicateObjectMap [
+		rr:predicate qb:dataSet;
+		rr:objectMap	[
+            rr:template "https://serdif.adaptcentre.ie/kg/2023/dataset#{{data.dsName}}" ;
+			rr:termType rr:IRI ;
+		];
+	]; 
+
+    rr:predicateObjectMap [
+		rr:predicate time:numericPosition ;
+		rr:objectMap	[
+            rr:column "LAG" ;
+			rr:termType rr:Literal ;
+		];
+	];
+   	
+	rr:predicateObjectMap [
+		rr:predicate sdmx-dimension:timePeriod ;
+		rr:objectMap  [ 
+			rrf:functionCall [
+	 			rrf:function <#time2datetime> ;
+	 			rrf:parameterBindings (
+	 				[ rr:column "TIME" ; ]
+	 			) ;
+	 		] ;	
+			rr:termType rr:Literal;
+			rr:datatype xsd:dateTime;
+		];		
+   ];
+
+   rr:predicateObjectMap [
+		rr:predicateMap [ 
+			rrf:functionCall [
+	 			rrf:function <#varNameClean> ;
+	 			rrf:parameterBindings (
+	 				[ rr:column "VARIABLE" ]
+	 			) ;
+	 		] ;
+			rr:termType rr:IRI;
+		];
+		rr:objectMap  [ 
+			rr:column "VALUE";
+			rr:termType rr:Literal;
+			rr:datatype xsd:float;
+		];		
+	]; 
+
+.
+
+<#eventNameSlice>
+	rrf:functionName "eventnameslice" ;
+	rrf:functionBody """
+		function eventnameslice(evName) {
+		// Format event name to be valid for a URL
+		return "https://serdif.adaptcentre.ie/kg/2023/dataset#{{data.dsName}}&slice=" + encodeURIComponent(evName);
+	}
+	""" ;
+.
+
+
+<#eventNameClean>
+	rrf:functionName "eventnameclean" ;
+	rrf:functionBody """
+		function eventnameclean(evName) {
+		// Format event name to be valid for a URL
+		return "https://serdif.adaptcentre.ie/kg/2023/dataset#event=" + encodeURIComponent(evName);
+	}
+	""" ;
+.
+
+
+<#time2datetime>
+	rrf:functionName "time2datetime" ;
+	rrf:functionBody """
+		function time2datetime(timeC) {
+		// From 2010-01-01 or 2010-01-01 12:00:00 to 2010-01-01T00:00:00Z
+        var date = new Date(timeC);
+        var z = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+		return z.toISOString().split('.')[0]+"Z" ;
+	}
+	""" ;
+.
+
+<#varNameClean>
+	rrf:functionName "varnameclean" ;
+	rrf:functionBody """
+		function varnameclean(pName) {
+		// Fix format variable name to comply with URI standard symbols
+		// by replacing parentheses, dashes, plus signs and commas
+		// "Indeno-(1,2,3-cd)pyrene in PM10" -> "Indeno123cdpyreneinPM10"
+		var pNameC = pName.replace(/[{()}]/g, '').replace(/\\-/g, '').replace(/\\+/g, '').replace(/,/g, '').replace(/\\s/g, '').replace(/\\=/g, '') ;
+		return "https://serdif.adaptcentre.ie/kg/2023/measure#has" + pNameC + "Value";
+	}
+	""" ;
+.

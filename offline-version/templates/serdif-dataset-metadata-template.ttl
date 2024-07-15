@@ -1,0 +1,304 @@
+@prefix rdf: 			<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: 			<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: 			<http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: 			<http://www.w3.org/2002/07/owl#> .
+
+@prefix dct: 			<http://purl.org/dc/terms/> .
+@prefix dcat: 			<http://www.w3.org/ns/dcat#> .
+@prefix prov:			<http://www.w3.org/ns/prov#> .
+@prefix prvt:			<http://purl.org/net/provenance/ns#> .
+@prefix foaf:			<http://xmlns.com/foaf/0.1/> .
+@prefix sp:				<http://spinrdf.org/spin#> .
+
+@prefix qb:  			<http://purl.org/linked-data/cube#> .
+
+@prefix sdmx-concept:  	<http://purl.org/linked-data/sdmx/2009/concept#> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+@prefix sdmx-measure:   <http://purl.org/linked-data/sdmx/2009/measure#> .
+@prefix sdmx-metadata:  <http://purl.org/linked-data/sdmx/2009/metadata#> .
+@prefix sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#> .
+@prefix sdmx-subject:   <http://purl.org/linked-data/sdmx/2009/subject#> .
+
+@prefix geo: 			<http://www.opengis.net/ont/geosparql#> .
+@prefix qudt: 			<http://qudt.org/schema/qudt#> .
+@prefix unit: 			<http://qudt.org/vocab/unit/> .
+@prefix time:			<http://www.w3.org/2006/time#> .
+@prefix locn: 			<http://www.w3.org/ns/locn#>.
+
+@prefix serdif: 		<https://serdif.adaptcentre.ie/kg/2023/>.
+@prefix serdif-dataset: <https://serdif.adaptcentre.ie/kg/2023/dataset#> .
+@prefix serdif-measure: <https://serdif.adaptcentre.ie/kg/2023/measure#> .
+@prefix serdif-dimension: <https://serdif.adaptcentre.ie/kg/2023/dimension#> .
+@prefix serdif-slice: <https://serdif.adaptcentre.ie/kg/2023/slice#> .
+
+@prefix dpv:			<http://www.w3.org/ns/dpv#> .
+@prefix dpv-gdpr: 		<http://www.w3.org/ns/dpv-gdpr#> .
+@prefix obo:			<http://purl.obolibrary.org/obo/> .
+@prefix oboInOwl: <http://www.geneontology.org/formats/oboInOwl#> .
+@prefix odrl: 			<http://www.w3.org/ns/odrl/2/> .
+@prefix duodrl:		<https://w3id.org/duodrl#> .	
+@prefix skos: 		<http://www.w3.org/2004/02/skos/core#> .
+
+
+# -- Data Set ----------------------------------------------------------
+
+serdif-dataset:ds_{{data.queryTimeStr}}
+	a 							qb:DataSet, geo:Feature, prov:Entity, dcat:Dataset ;
+    dct:title 					"Dataset with spatiotemporal data linked with multiple events related to {{data.context}}"@en ;
+    rdfs:label      			"Dataset with spatiotemporal data linked with multiple events related to {{data.context}}"@en ;
+    rdfs:comment    		"The dataset is the result of linking spatiotemporal datasets to particular events related to {{data.context}} through space and time. The dataset contains observations within an area relevant to each particular event and for a time window before the event in {{data.timeUnit}}."@en ;
+    dct:description 			"The dataset is the result of linking spatiotemporal datasets to particular events related to {{data.context}} through space and time. The dataset contains observations within an area relevant to each particular event and for a time window before the event in {{data.timeUnit}}."@en ;
+    # After depositing this data set in a repository uncomment the line below and substitute the DOI url link for the appropriate value
+    #dct:identifier 			<https://doi.org/10.5281/zenodo.5544257> ;
+    dct:hasVersion				"{{data.version}}" ;
+    dct:issued      			"{{data.queryDateTime}}"^^xsd:dateTime ;
+    dct:publisher   			{{data.publisher}} ;
+	dct:license 				{{data.license}} ;
+
+	# -- Themes describing the dataset ---------------------------------
+    dcat:theme
+        sdmx-subject:3.2 ,      					      # Regional and small area statistics
+        sdmx-subject:3.1 ,      					  	  # Environment
+        <https://www.wikidata.org/entity/Q1656682>	, # Event
+        <https://www.wikidata.org/entity/Q186588>		; # Time series
+
+	# -- Spatial descriptors -------------------------------------------
+	locn:geometry 			serdif-dataset:ds_{{data.queryTimeStr}}-geo ;
+
+	# -- Temporal descriptors ------------------------------------------
+	dcat:temporalResolution 	"{{data.timeRes}}"^^xsd:duration ;
+	dct:temporal 				serdif-dataset:ds_{{data.queryTimeStr}}-temporal ;
+
+	# -- RDF Data cube structure ---------------------------------------
+	qb:structure 				serdif-dataset:ds_{{data.queryTimeStr}}-dsd ;
+
+	# -- Activity that constructed the data set ------------------------
+    prov:wasGeneratedBy 		serdif-dataset:ds_{{data.queryTimeStr}}-linkage ;
+    {% for ev in data.eventNameList %}prov:wasGeneratedBy  		serdif:{{ev}}-journey ;
+	{% endfor %}    
+    # -- Data protection aspects ---------------------------------------
+    dpv:hasDataController 				{{data.dataController}} ;
+	dpv:hasProcessing					serdif:LinkDatasetToEvent ;
+	dpv:hasPurpose						serdif:ProcessingPurpose ;
+	dpv:hasRecipient						{{data.orcid}} ;
+	dpv:hasRisk								serdif:IdentificationRisk ;
+.
+
+# -- Distribution ------------------------------------------------------
+
+serdif-dataset:ds_{{data.queryTimeStr}}-trig
+	a 	dcat:Distribution, prov:Entity ;
+	dct:title							"ds_{{data.queryTimeStr}}.trig" ;
+	dct:description				"Trig (RDF) distribution of serdif-dataset:ds_{{data.queryTimeStr}}"@en ;
+	dct:license 					{{data.license}} ;
+	dcat:mediaType 			<https://www.iana.org/assignments/media-types/application/trig> ;
+	dcat:byteSize 				"{{data.fileSizeTRIG}}"^^xsd:float ;
+.
+
+serdif-dataset:ds_{{data.queryTimeStr}}-csv
+	a 	dcat:Distribution, prov:Entity ;
+	dct:title							"ds_{{data.queryTimeStr}}_raw.csv" ;
+	dct:description				"CSV distribution of serdif-dataset:ds_{{data.queryTimeStr}}"@en ;
+	dct:license 					{{data.license}} ;
+	dcat:mediaType 			<https://www.iana.org/assignments/media-types/text/csv> ;
+	dcat:byteSize 				"{{data.fileSizeCSV}}"^^xsd:float ;
+.
+
+serdif-dataset:ds_{{data.queryTimeStr}}_map-ttl
+	a 	dcat:Distribution, prov:Entity ;
+	dct:title							"ds_{{data.queryTimeStr}}_map.ttl" ;
+	dct:description				"Turtle distribution of the R2RML mapping to generate ds_{{data.queryTimeStr}}.trig"@en ;
+	dct:license 					{{data.license}} ;
+	dcat:mediaType 			<https://www.iana.org/assignments/media-types/text/turtle> ;
+	dcat:byteSize 				"{{data.fileSizeMap}}"^^xsd:float ;
+.
+
+# -- Datasets used ---------------------------------------------------
+{% for filename, format, formatLink, fileSizeDS in data.extDataSetsUsedDict %}
+serdif-dataset:{{filename}}-{{format}}
+	a 	dcat:Distribution, prov:Entity ;
+	dct:title							"{{filename}}" ;
+	dct:description				"{{format}} distribution of the original spatiotemporal dataset used in the linkage process."@en ;
+	dcat:mediaType 			{{formatLink}} ;
+	dcat:byteSize 				"{{fileSizeDS}}"^^xsd:float ;
+.
+{% endfor %}
+
+# -- Agents ------------------------------------------------------------
+{{data.orcid}} a prov:Person, prov:Agent, dpv:DataProcessor .
+
+{{data.publisher}} a dct:Agent .
+
+# -- Period of time included in the data set ---------------------------
+
+serdif-dataset:ds_{{data.queryTimeStr}}-temporal
+	a 						dct:PeriodOfTime ;
+	rdfs:comment    		"Time interval defined by the maximum and minimum date available taking into account all events"@en ;
+	dcat:startDate 			"{{data.startDateTime}}"^^xsd:dateTime ;
+	dcat:endDate   			"{{data.endDateTime}}"^^xsd:dateTime ;
+.
+
+# -- Region geometries -------------------------------------------------
+serdif-dataset:ds_{{data.queryTimeStr}}-geo
+	a 						geo:Geometry ;
+	geo:asWKT 	{{data.dsgeo}} ;
+.
+
+# -- Data provenance and lineage ---------------------------------------
+serdif-dataset:ds_{{data.queryTimeStr}}-linkage
+	# -- Type of activity -------------------------------------------------
+	a prov:Activity, prvt:DataCreation ;
+	# -- External data sets used in the activity -----------------------------
+	{% for datasets in data.extDataSetsUsedDictL %} prov:used	{{datasets}} ;
+	{% endfor %}
+	# -- ORCID for the agent that performed the activity ---------------------
+	prov:wasAssociatedWith 	{{data.orcid}} ;
+	# -- Activity explanation for humans -----------------------------------
+	rdfs:comment		"The activity describes a SPARQL query to link spatiotemporal data to particular events by reasoning over location and time. The GeoSPARQL function geof:sfWithin is used to select environmental data within an area relevant to each event, and xsd:duration to filter a specific time window prior to the event."@en ;
+	# -- Query to link events with datasets -------------------------------
+	prvt:usedGuideline [ 	
+		a prvt:CreationGuideline, prvt:SPARQLquery, sp:Select ;
+			{% for query in data.queryTextSelect %}sp:text """
+			{{query}}
+			""";
+			{% endfor %}  
+			
+		] ;
+	# -- Dataset resulting from the linkage activity -------------------------
+	prov:generated serdif-dataset:ds_{{data.queryTimeStr}}-csv ;
+.
+
+serdif-dataset:ds_{{data.queryTimeStr}}-mapping
+	# -- Type of activity ----------------------------------------------
+	a prov:Activity, prvt:DataCreation ;
+	# -- External data sets used in the activity --------------------------
+	prov:used  				serdif-dataset:ds_{{data.queryTimeStr}}-csv, serdif-dataset:ds_{{data.queryTimeStr}}_map-ttl ;
+	# -- ORCID for the agent that performed the activity ------------------
+	prov:wasAssociatedWith 	{{data.orcid}} ;
+	# -- Activity explanation for humans --------------------------------
+	rdfs:comment		"The activity describes the R2RML mapping of the resulting event-datasets linked data by the serdif-dataset:ds_{{data.queryTimeStr}}-linkage activity from CSV to RDF."@en ;
+	# -- Dataset generated by the mapping activity ----------------------
+	prov:generated		serdif-dataset:ds_{{data.queryTimeStr}}-trig ;
+.
+
+# -- Data protection terms ---------------------------------------------
+
+serdif:LinkDatasetToEvent
+	a	dpv:Combine, dpv:Align, dpv:Consult ;
+	{% for datasets in data.extDataSetsUsedDictL %}dpv:hasDataSource	{{datasets}} ;
+	{% endfor %}
+	rdfs:comment			"Linking particular events with spatiotemporal datasets to analyse the resulting linked data. The data sources are consulted and combined using SPARQL queries which reason over location and time. The dataset observations are linked within the region and for a specific time window related to an event."@en ;
+.
+
+serdif:IdentificationRisk
+	rdfs:subClassOf		dpv:Risk ;
+	rdfs:comment			"{{data.IdentificationRiskComment}}"@en  ;
+.
+
+# -- Data structure definition -----------------------------------------
+serdif-dataset:ds_{{data.queryTimeStr}}-dsd
+        a qb:DataStructureDefinition ;
+        rdfs:comment  "RDF Data Cube data structure definition for event-environmental linked observations (multi-measure approach) provided with variable normals and standard deviation values providing historical context for each particular event."@en ;
+		qb:component
+
+        # The dimensions
+			[ 	a	qb:ComponentSpecification ;
+				qb:dimension serdif-dimension:event ;
+				qb:order "1"^^xsd:int;
+				qb:componentAttachment qb:Slice  ] ,
+
+			[ 	a qb:ComponentSpecification ;
+				qb:dimension serdif-dimension:area ;
+				qb:order "2"^^xsd:int;
+				qb:componentAttachment qb:Slice ] ,
+
+			[ 	a qb:ComponentSpecification ;
+				qb:dimension sdmx-dimension:timePeriod ;
+				qb:order "3"^^xsd:int;
+				qb:componentAttachment qb:Slice ] ;
+
+		# The measures
+        {% for eeVar in data.eeVarsL %}
+        qb:component  [ a	qb:ComponentSpecification ;		qb:measure  serdif-measure:has{{eeVar}}Value ] ;
+        {% endfor %}
+        # slices
+		qb:sliceKey serdif:sliceByTime ;
+ .
+
+serdif:sliceByTime a qb:SliceKey;
+	rdfs:label "slice by time"@en;
+	rdfs:comment "Slice by fixing event and observation types and grouping measurements by observation time"@en;
+	qb:componentProperty serdif-dimension:measureType, serdif-dimension:event, sdmx-dimension:timePeriod ;
+.
+# -- Dimensions and measures  ------------------------------------------
+
+# event
+serdif-dimension:event
+	a 					qb:DimensionProperty, rdf:Property ;
+    rdfs:range 			rdfs:Resource;
+    qb:concept 			sdmx-concept:statUnit ;
+    rdfs:label 				"Reference Event"@en ;
+    rdfs:comment 		"The geolocated point in time for which information is sought and for which statistics are ultimately compiled."@en ;
+.
+
+# area
+serdif-dimension:area
+	a 					qb:DimensionProperty, rdf:Property ;
+    rdfs:range 			rdfs:Resource;
+    qb:concept 			sdmx-concept:refArea ;
+    rdfs:label 				"Event Area"@en ;
+    rdfs:comment 		"The geographic area to which the measured statistical phenomenon relates."@en ;
+    rdfs:isDefinedBy 	<https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+.
+
+# time period
+sdmx-dimension:timePeriod
+	a 					qb:DimensionProperty, rdf:Property ;
+    rdfs:range 			rdfs:Resource;
+    qb:concept 			sdmx-concept:timePeriod ;
+    rdfs:label 				"Time Period"@en ;
+    rdfs:comment 		"The period of time or point in time to which the measured observation refers."@en ;
+    rdfs:isDefinedBy 	<https://sdmx.org/wp-content/uploads/01_sdmx_cog_annex_1_cdc_2009.pdf> ;
+.
+
+{% for eeVar in data.eeVarsText %}
+# {{eeVar}}
+serdif-measure:has{{eeVar}}Value
+	a              		owl:DatatypeProperty , qb:MeasureProperty ;
+	rdfs:label     		"{{eeVar}}"@en ;
+	rdfs:subPropertyOf  sdmx-measure:obsValue ;
+	rdfs:range     		xsd:float ;
+	#to fix in future versions -> rdfs:seeAlso		{{eeVar}} ;
+.
+{% endfor %}
+
+# -- Event Description -----------------------------------------------
+{% for eventName, evDate, evPoint, evStart, evEnd, evArea, datasets in data.eventDict %}
+serdif:{{eventName}}-journey	a	prov:Activity, prvt:DataCreation ;
+	rdfs:label 						"{{eventName}} journey"@en ;
+	rdfs:comment 				"Event journey parameters to align environmental datasets calculated from the event input data (prov:qualifiedStart): date (prov:atTime) and location (prov:atLocation). The date is used to compute an interval to gather data (prov:startedAtTime, prov:endedAtTime) and the point location (prov:atLocation) is used to select the study area around the event (prov:atLocation). The event journey parameters are a result of a set (prvt:usedGuideline) of SPARQL queries (sp:text)."@en ;
+	# Time of the event
+	prov:qualifiedStart [
+      a prov:Start;
+      prov:entity       	serdif:{{eventName}}-input ;
+      prov:atTime       "{{evDate}}"^^xsd:dateTime ;
+      prov:atLocation   "{{evPoint}}"^^geo:wktLiteral ;
+   ];
+	# Interval of data related to the event
+	prov:startedAtTime 		"{{evStart}}"^^xsd:dateTime ;
+	prov:endedAtTime 		"{{evEnd}}"^^xsd:dateTime ;
+	# Area of the event
+	prov:atLocation 				"{{evArea}}"^^geo:wktLiteral ;
+	# Datasets used
+	prov:used							{{datasets}} ; 
+	# -- ORCID for the agent that performed the activity ---------------
+	prov:wasAssociatedWith 	{{data.orcid}} ; 
+.
+
+serdif:{{eventName}}-input a prov:Entity ;
+	rdfs:label 						"{{eventName}} input data"@en ;
+	rdfs:comment 				"The event input data refers to the user input of date, location and time-window to select the data from in the serdif:{{eventName}}-journey activity."@en ;
+.
+{% endfor %}
