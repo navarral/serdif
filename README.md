@@ -10,11 +10,9 @@ SERDIF is combination of methods and tools based on the use of World Wide Web Co
 
 The data linkage takes place at a query level where the geographic location ([GeoSPARQL](https://www.ogc.org/standards/geosparql)) and time window ([xsd:dateTime](https://www.w3.org/TR/xmlschema11-2/) are used as the common aspects to link the data for each event.
 
-## Latest working version: phase-3
+## Latest working version: offline-version
 
-Knowledge Graph: https://serdif-kg.adaptcentre.ie/
-
-User Interface: https://serdif-ui.adaptcentre.ie/
+User Interface: to be updated
 
 ## Evaluation
 
