@@ -13,7 +13,10 @@ The SERDIF offline app is a Graphical User Interface (GUI) to link spatiotempora
 ### Step 1: Building the Docker image 
 
 Navigate to the directory containing the `Dockerfile` and run the following command: 
-```sh docker build -t serdif:offline . ```
+
+```sh 
+docker build -t serdif:offline . 
+```
 
 ### Step 2: Running the Docker container
 
