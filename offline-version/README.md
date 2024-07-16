@@ -25,7 +25,7 @@ docker run -p 8081:8081 serdif:offline
 ```
 
 ### Step 3: Accessing the app
-Once the container is running, you can access the application in your web browser at: http://localhost:8081
+Once the container is running, you can access the application in your web browser at: http://0.0.0.0:8081
 
 ### Stopping the Docker container
 
