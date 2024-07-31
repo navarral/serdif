@@ -50,6 +50,16 @@ def printProgressBar(iteration, prefix, suffix, decimals, length, fill, printEnd
 
 # Function to build serdif-geosparql server
 def serdif_geosparql():
+    # Path to the directory you want to delete
+    db_path = 'data/serdif-geosparql'
+
+    # Check if the directory exists
+    if os.path.exists(db_path):
+        # Remove the directory and its contents
+        call(['rm', '-r', db_path], shell = True)
+        print(f"Removed existing directory: {db_path}")
+    else:
+        print(f"Directory does not exist: {db_path}")
     # build serdif-geosparql SPARQL endpoint
     build_serdifstore = 'java -jar data/jena-fuseki-geosparql-4.7.0.jar -t "data/serdif-geosparql" -i'
     p_build_serdifstore = run(build_serdifstore, shell=True)
@@ -1240,7 +1250,7 @@ PREFIX time: <http://www.w3.org/2006/time#>
     if os.path.exists(outfolder):
         shutil.rmtree(outfolder, ignore_errors=True)
     #
-    call(['rm -r data/serdif-geosparql'], shell=True) 
+    # call(['rm -r data/serdif-geosparql'], shell=True) 
     call(['find . -maxdepth 1 -name "*.zip" -type f -mtime +1 -exec rm -f {} +', ], shell=True)
     print('\nLinked data zip file ready in your local folder')
     printProgressBar(8, prefix='Progress:', suffix='Completed', decimals=1,
