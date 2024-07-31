@@ -2,6 +2,12 @@
 
 The Semantic Environmental and Rare disease Data Integration Framework (SERDIF) seeks to enable the data linkage between health events and environmental data for health data researchers. 
 
+## Latest working version: offline-version
+
+* **Offline-version:** [Docker](https://github.com/navarral/serdif/tree/main/offline-version)
+* **Example user interface:** [https://serdif.fht.org/](https://serdif.fht.org/)
+
+## Summary
 SERDIF is combination of methods and tools based on the use of World Wide Web Consortium (W3C) standards to model graph data: the Resource Description Framework ([RDF](https://www.w3.org/TR/rdf11-concepts/)), the RDF query language SPARQL [SPARQL](https://www.w3.org/TR/sparql11-query/) and the databases to store RDF graphs.
 
 1. The Knowledge Graph (KG) component is where environmental data and health data is linked together through location and time using [RDF](https://www.w3.org/TR/rdf11-concepts/) and [SPARQL queries](https://www.w3.org/TR/sparql11-query/). 
@@ -10,9 +16,7 @@ SERDIF is combination of methods and tools based on the use of World Wide Web Co
 
 The data linkage takes place at a query level where the geographic location ([GeoSPARQL](https://www.ogc.org/standards/geosparql)) and time window ([xsd:dateTime](https://www.w3.org/TR/xmlschema11-2/) are used as the common aspects to link the data for each event.
 
-## Latest working version: offline-version
 
-User Interface: to be updated
 
 ## Evaluation
 
