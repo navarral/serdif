@@ -12,6 +12,7 @@ from app_linkage import load_events, uplift_metadata, serdif_geosparql, link_dat
 # from serdif import linkage
 import time
 import re
+from subprocess import call
 
 # Set the working directory relative to the script's location
 # os.chdir(os.path.dirname(__file__))
@@ -1012,6 +1013,15 @@ def start_linkage(n_linkage,
         elif uploadMetadataTableColor:
             df_metadata_up = pd.DataFrame(uploadMetadataTableData)
 
+
+        try:
+            #p_rm_serdifstore = run(rm_serdifstore, shell=True)
+            call(['rm -r data/serdif-geosparql'], shell=True) 
+            print('Removed data/serdif-geosparql') 
+        except:
+            print('No data/serdif-geosparql')
+
+        
         # Link the data using the funcitons in linkage.py
         load_events(
             event_data=df_data_up,
