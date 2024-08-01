@@ -50,16 +50,6 @@ def printProgressBar(iteration, prefix, suffix, decimals, length, fill, printEnd
 
 # Function to build serdif-geosparql server
 def serdif_geosparql():
-    # Path to the directory you want to delete
-    db_path = 'data/serdif-geosparql'
-
-    # Check if the directory exists
-    if os.path.exists(db_path):
-        # Remove the directory and its contents
-        call(['rm', '-r', db_path], shell = True)
-        print(f"Removed existing directory: {db_path}")
-    else:
-        print(f"Directory does not exist: {db_path}")
     # build serdif-geosparql SPARQL endpoint
     build_serdifstore = 'java -jar data/jena-fuseki-geosparql-4.7.0.jar -t "data/serdif-geosparql" -i'
     p_build_serdifstore = run(build_serdifstore, shell=True)
