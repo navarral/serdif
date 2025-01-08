@@ -29,7 +29,7 @@ The usability and potential usefulness of the SERDIF framework has been evaluate
 * **phase-2**: A. Navarro-Gallinad, F. Orlandi, J. Scott, M. Little and D. O’Sullivan, Evaluating the usability of a semantic environmental health data framework: approach and study. Semantic Web Journal 11(1) (2022), Publisher: IOS Press. [https://doi.org/10.3233/SW-223212](https://doi.org/10.3233/SW-223212)
 
 
-* **phase-3**: drafting
+* **phase-3**: Navarro-Gallinad, A., Orlandi, F., Scott, J. et al. Enabling data linkages for rare diseases in a resilient environment with the SERDIF framework. npj Digital Medicine 7, 274 (2024). [https://doi.org/10.1038/s41746-024-01267-6](https://doi.org/10.1038/s41746-024-01267-6)
 
 ## Contact
 This space is administered by:  
